@@ -13,8 +13,8 @@ static class Weather{
 static class Speed{
  
  final static int Stationary = 0;         //mph
- final static int 0_90 = 1;
- final static int 91_Above = 2;
+ final static int zero_90 = 1;
+ final static int ninety_Above = 2;
  final static int Unknown = 3; 
 }
 
@@ -41,8 +41,8 @@ static class VehicleType{
 static class Age{
  
  final static int Under18 = 0;
- final static int 19_40 = 1;
- final static int 41_60 = 2;    
+ final static int eighteen_40 = 1;
+ final static int fourty_60 = 2;    
  final static int Over61 = 3;
  final static int Unknown = 4;  
 }
@@ -60,7 +60,7 @@ static class Day{
  final static int Weekday = 0;
  final static int Weekend = 1;
  final static int Holiday = 2; 
- final static int Unknown = 3
+ final static int Unknown = 3;
 }
 
 static class Month{
