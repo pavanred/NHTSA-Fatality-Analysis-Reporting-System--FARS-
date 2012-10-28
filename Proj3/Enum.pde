@@ -1,4 +1,93 @@
 
+static class Weather{
+
+  final static int Clear = 100;   // Clear/cloudy
+  final static int Rainy = 101;   // Rain/Sleet/Hail 
+  final static int Windy = 102;   // Windy/Blowing dust, soil, sand
+  final static int Snow = 103;    // Snow  
+  final static int Foggy = 104;   // Fog/Smog/Smoke
+  final static int Unknown = 105; // Unknown/NotReported/Others 
+  
+}
+
+static class Speed{
+ 
+ final static int Stationary = 0;         //mph
+ final static int 0_90 = 1;
+ final static int 91_Above = 2;
+ final static int Unknown = 3; 
+}
+
+static class LightCondition{
+
+  final static int DayLight = 100;    // Daylight
+  final static int Dim = 101;         // Dawn/Dusk 
+  final static int Dark = 102;        // Dark
+  final static int Unknown = 103;     // Unknown  
+}
+
+static class VehicleType{
+ 
+ final static int TwoWheelers = 0;
+ final static int PassengerCars = 1;
+ final static int SUV = 2;    //minivans, pickup trucks
+ final static int Transport = 3;
+ final static int EmergencyServices = 4;
+ final static int Others = 5; //Motor boats, ATVs, Trailers
+ final static int Unknown = 6;
+  
+}
+
+static class Age{
+ 
+ final static int Under18 = 0;
+ final static int 19_40 = 1;
+ final static int 41_60 = 2;    
+ final static int Over61 = 3;
+ final static int Unknown = 4;  
+}
+
+static class AlcoholTest{
+ 
+ final static int Sober = 0;
+ final static int MildlyDrunk = 1;
+ final static int HeavilyDrunk = 2;    
+ final static int Unknown = 3;
+}
+
+static class Day{
+ 
+ final static int Weekday = 0;
+ final static int Weekend = 1;
+ final static int Holiday = 2; 
+ final static int Unknown = 3
+}
+
+static class Month{
+  final static int Jan = 1;
+  final static int Feb = 2;
+  final static int Mar = 3;
+  final static int Apr = 4;
+  final static int May = 5;
+  final static int Jun = 6;
+  final static int Jul = 7;
+  final static int Aug = 8;
+  final static int Sep = 9;
+  final static int Oct = 10;
+  final static int Nov = 11;
+  final static int Dec = 12;
+  final static int Unknown = 13;
+}
+
+static class HourOfDay{
+ 
+ final static int Morning = 0;
+ final static int Afternoon = 1;
+ final static int Evening = 2; 
+ final static int Night = 3; 
+ final static int Unknown = 4; 
+}
+
 static class State{
 
   final static int Alabama = 1;
