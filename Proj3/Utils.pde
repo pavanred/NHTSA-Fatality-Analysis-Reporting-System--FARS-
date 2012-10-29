@@ -1,6 +1,15 @@
 
 import java.util.*;
 
+//percent screen width height utilites - should make it easier to use screen space
+int percentX(int value){  
+  return (value * width)/100;
+}
+
+int percentY(int value){
+  return (value * height)/100;
+} 
+
  //to be tested properly   
  public int getDay(int date){
   
