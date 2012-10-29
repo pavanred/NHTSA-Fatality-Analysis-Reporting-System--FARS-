@@ -2,8 +2,26 @@ boolean usingWall = false;
 
 int scaleFactor = 1;
 
+// Global vars 
+InteractiveMap map;
+Hashtable touchList;
+Location locationChicago = new Location(41.9f, -87.6f); // to set the initial location on the map.
+Location locationUSA = new Location(38.962f, -93.928); // Use with zoom level 6
+PVector mapSize;
+PVector mapOffset;
+MapArea mapArea;
+//End of global vars
+
+//=================================
 import processing.net.*;
 import omicronAPI.*;
+//stuff for modest maps
+import processing.opengl.*;
+import com.modestmaps.*;
+import com.modestmaps.core.*;
+import com.modestmaps.geo.*;
+import com.modestmaps.providers.*;
+//--end of stuff for modest maps
 
 OmicronAPI omicronManager;
 TouchListener touchListener;
@@ -12,6 +30,10 @@ TouchListener touchListener;
 PApplet applet;
 
 PFont plotFont;
+
+//===============Global vars====================
+GUI gui;
+//===============End of Global vars=============
 
 // Override of PApplet init() which is called before setup()
 public void init() {
@@ -28,9 +50,15 @@ void setup()
 {
   // For almost any Processing application size() should be called before anything else in setup()
   if( usingWall ) 
-    size( 8160, 2304, P3D ); // Cyber-Commons wall (P3D renderer is recommended for running on the wall)
+  {
+    size( 8160, 2304, P2D ); // Cyber-Commons wall (P3D renderer is recommended for running on the wall)
+    noSmooth();
+  }
   else
-    size( 1350, 382 );
+  {
+    size( 1350, 382 );    
+    smooth();
+  }
   
   setupGUIElements();
   
@@ -52,31 +80,156 @@ void setupGUIElements()
 {
   plotFont = createFont("DroidSans-Bold.ttf",12*scaleFactor);
   textFont(plotFont);
+  
+  // init map
+
+  
+  //sets width and height for the entire drawing canvas.
+  float windowX1 = width*0.01;
+  float windowX2 = width*0.99;
+  float windowY1 = height*0.05;
+  float windowY2 = height*0.95;
+  gui = new GUI(windowX1,windowY1,windowX2,windowY2);
+  
+  mapSize = new PVector( width/2, height );
+  mapOffset = new PVector(width/2, 0 );  
+  println(gui.mapY2-gui.mapY1);
+  map = new InteractiveMap(this, new Microsoft.AerialProvider(),mapOffset.x, mapOffset.y, mapSize.x, mapSize.y ); // does not work when put inside MapArea constructor
+  mapArea = new MapArea(mapSize,mapOffset);
+  
+  addMouseWheelListener(new java.awt.event.MouseWheelListener() { 
+    public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) { 
+      mouseWheel(evt.getWheelRotation());
+    }
+  }); 
+  
 }
 
 void draw()
 {
   background(20);
-  omicronManager.process();
+  gui.draw();
+  pushStyle();
+  omicronManager.process(); // always keep this at the end.
+  popStyle();
   
 }
 
-// Touch events
+//==========================================EVENT HANDLING================================
+
+
+// Touch position at last frame
+PVector lastTouchPos = new PVector();
+PVector lastTouchPos2 = new PVector();
+int touchID1;
+int touchID2;
+
+PVector initTouchPos = new PVector();
+PVector initTouchPos2 = new PVector();
+
 void touchDown(int ID, float xPos, float yPos, float xWidth, float yWidth){
   noFill();
   stroke(255,0,0);
   ellipse( xPos, yPos, xWidth * 2, yWidth * 2 );
+  
+  // Update the last touch position
+  lastTouchPos.x = xPos;
+  lastTouchPos.y = yPos;
+  
+  // Add a new touch ID to the list
+  Touch t = new Touch( ID, xPos, yPos, xWidth, yWidth );
+  touchList.put(ID,t);
+  
+  if( touchList.size() == 1 ){ // If one touch record initial position (for dragging). Saving ID 1 for later
+    touchID1 = ID;
+    initTouchPos.x = xPos;
+    initTouchPos.y = yPos;
+  }
+  else if( touchList.size() == 2 ){ // If second touch record initial position (for zooming). Saving ID 2 for later
+    touchID2 = ID;
+    initTouchPos2.x = xPos;
+    initTouchPos2.y = yPos;
+  }
 }// touchDown
 
 void touchMove(int ID, float xPos, float yPos, float xWidth, float yWidth){
   noFill();
   stroke(0,255,0);
   ellipse( xPos, yPos, xWidth * 2, yWidth * 2 );
+  
+  if( touchList.size() < 2 ){
+    // Only one touch, drag map based on last position
+    map.tx += (xPos - lastTouchPos.x)/map.sc;
+    map.ty += (yPos - lastTouchPos.y)/map.sc;
+  } else if( touchList.size() == 2 ){
+    // Only two touch, scale map based on midpoint and distance from initial touch positions
+    
+    float sc = dist(lastTouchPos.x, lastTouchPos.y, lastTouchPos2.x, lastTouchPos2.y);
+    float initPos = dist(initTouchPos.x, initTouchPos.y, initTouchPos2.x, initTouchPos2.y);
+    
+    PVector midpoint = new PVector( (lastTouchPos.x+lastTouchPos2.x)/2, (lastTouchPos.y+lastTouchPos2.y)/2 );
+    sc -= initPos;
+    sc /= 5000;
+    sc += 1;
+    //println(sc);
+    float mx = (midpoint.x - mapOffset.x) - mapSize.x/2;
+    float my = (midpoint.y - mapOffset.y) - mapSize.y/2;
+    map.tx -= mx/map.sc;
+    map.ty -= my/map.sc;
+    map.sc *= sc;
+    map.tx += mx/map.sc;
+    map.ty += my/map.sc;
+  } else if( touchList.size() >= 5 ){
+    
+    // Zoom to entire USA
+    map.setCenterZoom(locationUSA, 6);  
+  }
+  
+  // Update touch IDs 1 and 2
+  if( ID == touchID1 ){
+    lastTouchPos.x = xPos;
+    lastTouchPos.y = yPos;
+  } else if( ID == touchID2 ){
+    lastTouchPos2.x = xPos;
+    lastTouchPos2.y = yPos;
+  } 
+  
+  // Update touch list
+  Touch t = new Touch( ID, xPos, yPos, xWidth, yWidth );
+  touchList.put(ID,t);
 }// touchMove
 
 void touchUp(int ID, float xPos, float yPos, float xWidth, float yWidth){
   noFill();
   stroke(0,0,255);
   ellipse( xPos, yPos, xWidth * 2, yWidth * 2 );
+  
+  // Remove touch and ID from list
+  touchList.remove(ID);
 }// touchUp
+
+
+
+//END OF TOUCH EVENTS
+
+// zoom in or out: using mouse wheel
+void mouseWheel(int delta) {
+  float sc = 1.0;
+  if (delta < 0) {
+    sc = 1.05;
+  }
+  else if (delta > 0) {
+    sc = 1.0/1.05; 
+  }
+  float mx = (mouseX - mapOffset.x) - mapSize.x/2;
+  float my = (mouseY - mapOffset.y) - mapSize.y/2;
+  map.tx -= mx/map.sc;
+  map.ty -= my/map.sc;
+  map.sc *= sc;
+  map.tx += mx/map.sc;
+  map.ty += my/map.sc;
+}
+
+//==========================================END OF EVENT HANDLING================================
+
 
