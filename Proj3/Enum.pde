@@ -30,20 +30,19 @@ static class VehicleType{
  
  final static int TwoWheelers = 0;
  final static int PassengerCars = 1;
- final static int SUV = 2;    //minivans, pickup trucks
- final static int Transport = 3;
- final static int EmergencyServices = 4;
- final static int Others = 5; //Motor boats, ATVs, Trailers
- final static int Unknown = 6;
+ final static int UtilityVehicles = 2;    //minivans, pickup trucks
+ final static int HeavyTransport = 3;
+ final static int Others = 4; //Motor boats, ATVs, Trailers
+ final static int Unknown = 5;
   
 }
 
 static class Age{
  
  final static int Under18 = 0;
- final static int eighteen_40 = 1;
- final static int fourty_60 = 2;    
- final static int Over61 = 3;
+ final static int _18_40 = 1;
+ final static int _41_60 = 2;    
+ final static int Over60 = 3;
  final static int Unknown = 4;  
 }
 
