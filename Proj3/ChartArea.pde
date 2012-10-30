@@ -16,9 +16,9 @@ class ChartArea{
   
   void draw(){
     
-    Chart c = new Chart(X1,Y1,X2-X1,Y2-Y1,0,0,0,0);  //margins not defined
+    Chart c = new Chart(X1,Y1,X2-X1,Y2-Y1,percentX(5),percentX(5),percentY(3),percentY(12));  //margins not defined
     c.getData(new ArrayList<Float>(),2001,2011);
-    c.drawChart(0,255,10,5,"years","Crashes","");
+    c.drawChart(0,#FF4040,10,5,"Years","Crashes","");
     
     
   }
