@@ -25,7 +25,7 @@ class Chart{
   
   float[] dataset = new float[30];
   
-  String font = "DroidSans-Bold.ttf";
+  String font = "Verdana";
 
   Chart(float _x,float _y, float _Width, float _Height, float _marginwl, float _marginwr, float _marginht, float _marginhb){
     
@@ -66,18 +66,19 @@ class Chart{
        
     labely = _labely;
     labelx = _labelx;
-    title = _title;   
-        
+    title = _title; 
+            
     stroke(255);
     strokeWeight(2 * scaleFactor);
     line(X, Y - percentY(4), X, Y + plotHeight);
     line(X, Y + plotHeight, X + plotWidth + percentX(2), Y + plotHeight);
     
-    fill(c);
+    fill(255);
     textFont(createFont(font, 12 * scaleFactor));
     textAlign(CENTER); 
     
     noFill();
+    stroke(c);
     beginShape();
     int difference = ceil(ymaxValue) - floor(yminValue);
     
@@ -98,6 +99,7 @@ class Chart{
        
     endShape();
     smooth();
+    stroke(255);
     
     for (int value = floor(yminValue), index = 0; value <= ceil(ymaxValue); value++, index++) {
        
@@ -105,17 +107,17 @@ class Chart{
        intervals = 1; 
         
       if(index % intervals == 0){
-          
-          stroke(255);
-          PFont myFont = createFont(font, 11 * scaleFactor);
-          textFont(myFont);
+
+          textFont(createFont(font, 11 * scaleFactor));
           
           if(value == floor(yminValue)){
             textAlign(RIGHT, BOTTOM);
           }
           else
             textAlign(RIGHT, CENTER);
-            
+           
+          fill(255); 
+           
           text(str(value),X - percentX(1), Y + plotHeight - (index * plotHeight/difference));
           
           strokeWeight(2 * scaleFactor);
@@ -137,8 +139,7 @@ class Chart{
         if(index % intervals == 0){
 
           stroke(255);
-          PFont myFont = createFont(font, 11 * scaleFactor);
-          textFont(myFont);
+          textFont(createFont(font, 11 * scaleFactor));
           textAlign(CENTER, TOP);
           text(str(value),X + (index * plotWidth/(xmaxValue-xminValue)),Y + plotHeight + percentY(3));
           //println(plotWidth);
@@ -156,9 +157,9 @@ class Chart{
      }
     
     textFont(createFont(font, 12 * scaleFactor));
-    textAlign(CENTER);    
+    textAlign(RIGHT);    
     text(labelx,X + plotWidth, Y + plotHeight + percentY(10));
-
+    noFill();
   } 
 
 }
