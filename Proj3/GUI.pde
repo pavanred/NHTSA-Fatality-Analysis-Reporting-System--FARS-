@@ -53,7 +53,13 @@ class GUI
     
     rect(0,0,width/2,height); // to hide extra map drawn. TODO - find a better way.
     
+    
+    
     rect(graphX1,graphY1,graphX2,graphY2);
+    
+     //rect(graphX1,graphY1,graphX2,graphY2);
+    ChartArea chartArea = new ChartArea(graphX1,graphY1,graphX2,graphY2);
+    chartArea.draw();    
 
     rect(controlsX1,controlsY1,controlsX2,controlsY2);
     
