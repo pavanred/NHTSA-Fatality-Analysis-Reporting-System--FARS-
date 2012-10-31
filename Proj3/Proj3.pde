@@ -1,3 +1,4 @@
+
 boolean usingWall = false;
 
 int scaleFactor = 1;
@@ -7,9 +8,22 @@ InteractiveMap map;
 Hashtable touchList;
 Location locationChicago = new Location(41.9f, -87.6f); // to set the initial location on the map.
 Location locationUSA = new Location(38.962f, -93.928); // Use with zoom level 6
+Location locationIL = new Location(40.43f,-88.92f);
 PVector mapSize;
 PVector mapOffset;
 MapArea mapArea;
+private static Map<String, Integer> weatherHashMap;
+private static Map<Integer, String> stateHashMap;
+
+ArrayList<TileButton> buttons;
+Button qButton;
+ArrayList<DataBean> pointList;
+
+QueryBuilder execQuery;
+
+Boolean stateLevelZoom = null;
+
+DataBean selectedPoint = null;
 //End of global vars
 
 //=================================
@@ -21,6 +35,7 @@ import com.modestmaps.*;
 import com.modestmaps.core.*;
 import com.modestmaps.geo.*;
 import com.modestmaps.providers.*;
+import com.google.common.*;
 //--end of stuff for modest maps
 
 OmicronAPI omicronManager;
@@ -82,7 +97,7 @@ void setupGUIElements()
   textFont(plotFont);
   
   // init map
-
+  
   
   //sets width and height for the entire drawing canvas.
   float windowX1 = width*0.01;
@@ -102,7 +117,8 @@ void setupGUIElements()
       mouseWheel(evt.getWheelRotation());
     }
   }); 
-  
+  execQuery = new QueryBuilder();
+  execQuery.checking();
 }
 
 void draw()
@@ -132,6 +148,7 @@ void touchDown(int ID, float xPos, float yPos, float xWidth, float yWidth){
   stroke(255,0,0);
   ellipse( xPos, yPos, xWidth * 2, yWidth * 2 );
   
+  checkButtons(xPos,yPos);
   // Update the last touch position
   lastTouchPos.x = xPos;
   lastTouchPos.y = yPos;
@@ -157,46 +174,54 @@ void touchMove(int ID, float xPos, float yPos, float xWidth, float yWidth){
   stroke(0,255,0);
   ellipse( xPos, yPos, xWidth * 2, yWidth * 2 );
   
-  if( touchList.size() < 2 ){
-    // Only one touch, drag map based on last position
-    map.tx += (xPos - lastTouchPos.x)/map.sc;
-    map.ty += (yPos - lastTouchPos.y)/map.sc;
-  } else if( touchList.size() == 2 ){
-    // Only two touch, scale map based on midpoint and distance from initial touch positions
+  if(isWithinMap(xPos,yPos)){
+    if( touchList.size() < 2 ){
+      // Only one touch, drag map based on last position
+      map.tx += (xPos - lastTouchPos.x)/map.sc;
+      map.ty += (yPos - lastTouchPos.y)/map.sc;
+      applyChanges();
+    } else if( touchList.size() == 2 ){
+      int zin = map.getZoom();
+      // Only two touch, scale map based on midpoint and distance from initial touch positions
+      
+      float sc = dist(lastTouchPos.x, lastTouchPos.y, lastTouchPos2.x, lastTouchPos2.y);
+      float initPos = dist(initTouchPos.x, initTouchPos.y, initTouchPos2.x, initTouchPos2.y);
+      
+      PVector midpoint = new PVector( (lastTouchPos.x+lastTouchPos2.x)/2, (lastTouchPos.y+lastTouchPos2.y)/2 );
+      sc -= initPos;
+      sc /= 5000;
+      sc += 1;
+      //println(sc);
+      float mx = (midpoint.x - mapOffset.x) - mapSize.x/2;
+      float my = (midpoint.y - mapOffset.y) - mapSize.y/2;
+      map.tx -= mx/map.sc;
+      map.ty -= my/map.sc;
+      map.sc *= sc;
+      map.tx += mx/map.sc;
+      map.ty += my/map.sc;
+      int zout = map.getZoom();
+      if(zin-zout != 0)
+        applyChanges();
+    } else if( touchList.size() >= 5 ){
+      
+      // Zoom to entire USA
+      map.setCenterZoom(locationUSA, 6);  
+      applyChanges();
+    }
     
-    float sc = dist(lastTouchPos.x, lastTouchPos.y, lastTouchPos2.x, lastTouchPos2.y);
-    float initPos = dist(initTouchPos.x, initTouchPos.y, initTouchPos2.x, initTouchPos2.y);
+    // Update touch IDs 1 and 2
+    if( ID == touchID1 ){
+      lastTouchPos.x = xPos;
+      lastTouchPos.y = yPos;
+    } else if( ID == touchID2 ){
+      lastTouchPos2.x = xPos;
+      lastTouchPos2.y = yPos;
+    } 
     
-    PVector midpoint = new PVector( (lastTouchPos.x+lastTouchPos2.x)/2, (lastTouchPos.y+lastTouchPos2.y)/2 );
-    sc -= initPos;
-    sc /= 5000;
-    sc += 1;
-    //println(sc);
-    float mx = (midpoint.x - mapOffset.x) - mapSize.x/2;
-    float my = (midpoint.y - mapOffset.y) - mapSize.y/2;
-    map.tx -= mx/map.sc;
-    map.ty -= my/map.sc;
-    map.sc *= sc;
-    map.tx += mx/map.sc;
-    map.ty += my/map.sc;
-  } else if( touchList.size() >= 5 ){
-    
-    // Zoom to entire USA
-    map.setCenterZoom(locationUSA, 6);  
+    // Update touch list
+    Touch t = new Touch( ID, xPos, yPos, xWidth, yWidth );
+    touchList.put(ID,t);
   }
-  
-  // Update touch IDs 1 and 2
-  if( ID == touchID1 ){
-    lastTouchPos.x = xPos;
-    lastTouchPos.y = yPos;
-  } else if( ID == touchID2 ){
-    lastTouchPos2.x = xPos;
-    lastTouchPos2.y = yPos;
-  } 
-  
-  // Update touch list
-  Touch t = new Touch( ID, xPos, yPos, xWidth, yWidth );
-  touchList.put(ID,t);
 }// touchMove
 
 void touchUp(int ID, float xPos, float yPos, float xWidth, float yWidth){
@@ -214,22 +239,76 @@ void touchUp(int ID, float xPos, float yPos, float xWidth, float yWidth){
 
 // zoom in or out: using mouse wheel
 void mouseWheel(int delta) {
-  float sc = 1.0;
-  if (delta < 0) {
-    sc = 1.05;
+  int zin = map.getZoom();
+  if(isWithinMap(mouseX,mouseY)){
+    //applyChanges();
+    float sc = 1.0;
+    if (delta < 0) {
+      sc = 1.05;
+    }
+    else if (delta > 0) {
+      sc = 1.0/1.05; 
+    }
+    float mx = (mouseX - mapOffset.x) - mapSize.x/2;
+    float my = (mouseY - mapOffset.y) - mapSize.y/2;
+    map.tx -= mx/map.sc;
+    map.ty -= my/map.sc;
+    map.sc *= sc;
+    map.tx += mx/map.sc;
+    map.ty += my/map.sc;
   }
-  else if (delta > 0) {
-    sc = 1.0/1.05; 
-  }
-  float mx = (mouseX - mapOffset.x) - mapSize.x/2;
-  float my = (mouseY - mapOffset.y) - mapSize.y/2;
-  map.tx -= mx/map.sc;
-  map.ty -= my/map.sc;
-  map.sc *= sc;
-  map.tx += mx/map.sc;
-  map.ty += my/map.sc;
+  int zout = map.getZoom();
+  if(zin-zout != 0)
+    applyChanges();
 }
 
 //==========================================END OF EVENT HANDLING================================
 
 
+boolean isWithinMap(float x, float y) // checks if the touch is within map area before doing zoom or pan
+{
+  if ( (x >= mapOffset.x && x <=mapOffset.x+mapSize.x) && (y >= mapOffset.y && y <= mapOffset.y+mapSize.y) )
+    return true;
+  else 
+    return false;
+}
+
+void checkButtons(float xPos, float yPos) // checks if any of the buttons are pressed. If pressed does the appropriate DB operation.
+{
+  for(TileButton b : buttons)
+  {
+    if(b.touch(xPos,yPos)==1)
+    {
+      if(b.isSelected)
+        {
+          if(b.label.equals("Apply"))
+            applyChanges();
+        }
+    }
+  }
+  if(pointList!=null)
+  {
+    println(xPos+"-"+yPos);
+    for(DataBean b : pointList)
+    {
+//      println(b.x+","+b.y);
+      if(b.updateButton(xPos,yPos))
+      {
+        selectedPoint = b;        
+      }
+    }
+  }
+}
+
+void applyChanges()
+{
+    if(map.getZoom()>=7 && (stateLevelZoom==null || stateLevelZoom) ) //get point level data only if the map is zoomed > 5
+    {
+      pointList = execQuery.getPointsFromDB(2001);
+
+    }
+    else if(map.getZoom()<=6 && (stateLevelZoom==null || !stateLevelZoom))
+    {
+      pointList = execQuery.getStatePointsFromDB(2001);
+    }
+}
