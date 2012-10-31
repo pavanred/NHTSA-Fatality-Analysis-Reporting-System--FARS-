@@ -9,16 +9,16 @@ public class Button
         private float yPos2;
 	private float width;
 	private float height;
-	private String label;
+	public String label;
 	public boolean isSelected;
 
-	public Button(float x, float y, float w, float h, String l, int sF)
+	public Button(float x1, float y1, float x2, float y2, String l, int sF)
 	{
                 scaleFactor = sF;
-		xPos1 = x*sF;
-		yPos1 = y*sF;
-		xPos2 = w*sF;
-		yPos2 = h*sF;
+		xPos1 = x1*sF;
+		yPos1 = y1*sF;
+		xPos2 = x2*sF;
+		yPos2 = y2*sF;
 		label = l;
                 isSelected = false;
 	}
@@ -36,6 +36,7 @@ public class Button
                 fill(128+64+32+16);
                 textSize(12+2*scaleFactor);
 		text(label, xPos1 - .5*(xPos1-xPos2), yPos1-.5*(yPos1-yPos2)+4*scaleFactor);
+//text(label, xPos1 - .5*(xPos1-xPos2), yPos1-.5*(yPos1-yPos2));
 		
 	}
 
