@@ -8,6 +8,9 @@ class GUI
   float controlsX1,controlsY1,controlsX2,controlsY2;
   float mapX1,mapY1,mapX2,mapY2;
   float detailsX1,detailsY1,detailsX2,detailsY2;
+  float tabW,tabH;
+  ChartArea chartArea;
+  ListBox lb;
   GUI(float x1, float y1, float x2, float y2)
   {
     this.x1 = x1;
@@ -25,6 +28,9 @@ class GUI
     this.controlsX2 = x1 + (x2-x1)*0.5;
     this.controlsY2 = graphY2 + (y2-y1)*0.5;
     
+    this.tabW = (controlsX2-controlsX1)/10;
+    this.tabH = (controlsY2-controlsY1)*0.25;
+    
     this.mapX1 = graphX2;
     this.mapY1 = y1;
     this.mapX2 = x2;
@@ -35,6 +41,7 @@ class GUI
     this.detailsY1 = 0;
     this.detailsY2 = height*0.15;
     
+    println("====");
     setupControls();
     
   }
@@ -53,15 +60,14 @@ class GUI
     
     rect(0,0,width/2,height); // to hide extra map drawn. TODO - find a better way.
     
-    
-    
     rect(graphX1,graphY1,graphX2,graphY2);
     
      //rect(graphX1,graphY1,graphX2,graphY2);
-    ChartArea chartArea = new ChartArea(graphX1,graphY1,graphX2,graphY2);
     chartArea.draw();    
 
     rect(controlsX1,controlsY1,controlsX2,controlsY2);
+    tabs.draw();
+    
     
     fill(0,200);
     rect(detailsX1,detailsY1,detailsX2,detailsY2);
@@ -91,15 +97,22 @@ class GUI
     buttons.add(b);
     b = new TileButton((tileX1+tileX2)/2-(tileWidth*0.5),tileY2-tileHeight,(tileX1+tileX2)/2+(tileWidth*0.5),tileY2,"Apply");
     buttons.add(b);
+    
+    chartArea = new ChartArea(graphX1,graphY1,graphX2,graphY2); //init for chartarea.
+    
+//    lb = new ListBox(tileX1+tileWidth,tileY1+tileHeight,tileX1+tileWidth*2,tileY1+tileHeight*2,scaleFactor);
+//    lb.addItem("Hello1");
+//    lb.addItem("Hello2");
+//    lb.addItem("Hello3");
   }
-  
   
   void drawControls()
   {
-    for(TileButton b : buttons)
-    {
-      b.draw();
-    }
+//    for(TileButton b : buttons)
+//    {
+//      b.draw();
+//    }
+    //lb.draw();
     drawPointDetails();
   }
   

@@ -12,6 +12,8 @@ Location locationIL = new Location(40.43f,-88.92f);
 PVector mapSize;
 PVector mapOffset;
 MapArea mapArea;
+ControlsTab tabs;
+String currentTab;
 private static Map<String, Integer> weatherHashMap;
 private static Map<Integer, String> stateHashMap;
 
@@ -112,13 +114,16 @@ void setupGUIElements()
   map = new InteractiveMap(this, new Microsoft.AerialProvider(),mapOffset.x, mapOffset.y, mapSize.x, mapSize.y ); // does not work when put inside MapArea constructor
   mapArea = new MapArea(mapSize,mapOffset);
   
-  addMouseWheelListener(new java.awt.event.MouseWheelListener() { 
+  addMouseWheelListener(new java.awt.event.MouseWheelListener() {
     public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) { 
       mouseWheel(evt.getWheelRotation());
     }
   }); 
   execQuery = new QueryBuilder();
   execQuery.checking();
+  applyChanges();
+  tabs = new ControlsTab(gui.controlsX1,gui.controlsY1,gui.controlsX2,gui.tabH);
+
 }
 
 void draw()
@@ -174,6 +179,7 @@ void touchMove(int ID, float xPos, float yPos, float xWidth, float yWidth){
   stroke(0,255,0);
   ellipse( xPos, yPos, xWidth * 2, yWidth * 2 );
   
+  //Acts on the map only if lies within map area.
   if(isWithinMap(xPos,yPos)){
     if( touchList.size() < 2 ){
       // Only one touch, drag map based on last position
@@ -273,7 +279,8 @@ boolean isWithinMap(float x, float y) // checks if the touch is within map area 
     return false;
 }
 
-void checkButtons(float xPos, float yPos) // checks if any of the buttons are pressed. If pressed does the appropriate DB operation.
+// checks if any of the buttons are pressed. If pressed does the appropriate operation.
+void checkButtons(float xPos, float yPos) 
 {
   for(TileButton b : buttons)
   {
@@ -291,15 +298,16 @@ void checkButtons(float xPos, float yPos) // checks if any of the buttons are pr
     println(xPos+"-"+yPos);
     for(DataBean b : pointList)
     {
-//      println(b.x+","+b.y);
       if(b.updateButton(xPos,yPos))
       {
         selectedPoint = b;        
       }
     }
   }
+  tabs.updateTabs(xPos,yPos);
 }
 
+//Called whenever there is a zoom in/out. to call DB.
 void applyChanges()
 {
     if(map.getZoom()>=7 && (stateLevelZoom==null || stateLevelZoom) ) //get point level data only if the map is zoomed > 5
