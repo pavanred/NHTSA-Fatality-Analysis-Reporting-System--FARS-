@@ -57,7 +57,8 @@ class Chart{
     } */        
     // test data
 
-   xminValue = floor(getMinValue(dataset));
+   //yminValue = floor(getMinValue(dataset));
+   yminValue = 0; // to avoid data misinterpretation   
    ymaxValue = ceil(getMaxValue(dataset));  
    
    xminValue = floor(_xminValue);
@@ -98,7 +99,7 @@ class Chart{
         Float value = dataset[index];
 
         Float xVal = (plotWidth * index)/(xmaxValue-xminValue); 
-        Float yVal = (plotHeight * value)/difference;
+        Float yVal = (plotHeight * (value - yminValue))/difference;
         
         strokeWeight(2 * scaleFactor);        
         vertex(X + xVal, Y + plotHeight - yVal); 
@@ -154,7 +155,13 @@ class Chart{
 
           stroke(255);
           textFont(createFont(font, 11 * scaleFactor));
-          textAlign(CENTER, TOP);
+          
+          if(value == floor(xminValue)){
+            textAlign(LEFT, TOP);
+          }
+          else          
+            textAlign(CENTER, TOP);
+            
           text(str(value),X + (index * plotWidth/(xmaxValue-xminValue)),Y + plotHeight + percentY(3));
           //println(plotWidth);
           
