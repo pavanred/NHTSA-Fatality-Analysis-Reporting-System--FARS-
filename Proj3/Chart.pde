@@ -1,16 +1,16 @@
 class Chart{ 
   
-  float X; 
-  float Y;
-  float Width;
-  float Height;
-  float marginwl;  //margin width left
-  float marginwr;
-  float marginht;  //margin height top
-  float marginhb;
+  Float X; 
+  Float Y;
+  Float Width;
+  Float Height;
+  Float marginwl;  //margin width left
+  Float marginwr;
+  Float marginht;  //margin height top
+  Float marginhb;
   
-  float plotWidth;
-  float plotHeight;
+  Float plotWidth;
+  Float plotHeight;
   
   //axis range
   int xminValue;  
@@ -23,7 +23,7 @@ class Chart{
   String labely;
   String title;
   
-  float[] dataset = new float[30];
+  Float[] dataset;// = new Float[30];
   
   String font = "Verdana";
 
@@ -45,18 +45,20 @@ class Chart{
 
   void getData(ArrayList<Float> data, float _xminValue, float _xmaxValue){
     
-    //dataset = data.toArray(new int[data.size()]);
-    
+    dataset = new Float[data.size()];
+    dataset = data.toArray(new Float[data.size()]);
+   
     // test data  
+    /*dataset = new Float[10];
     Random rand = new Random();
     
     for(int i=0;i<10;i++){      
       dataset[i] = (rand.nextFloat()*500);
-    }         
+    } */        
     // test data
 
-   yminValue = floor(min(dataset));
-   ymaxValue = ceil(max(dataset));  
+   xminValue = floor(getMinValue(dataset));
+   ymaxValue = ceil(getMaxValue(dataset));  
    
    xminValue = floor(_xminValue);
    xmaxValue = ceil(_xmaxValue);   
@@ -70,36 +72,48 @@ class Chart{
             
     stroke(255);
     strokeWeight(2 * scaleFactor);
-    line(X, Y - percentY(4), X, Y + plotHeight);
-    line(X, Y + plotHeight, X + plotWidth + percentX(2), Y + plotHeight);
+    //line(X, Y - percentY(4), X, Y + plotHeight);
+    //line(X, Y + plotHeight, X + plotWidth + percentX(2), Y + plotHeight);
     
     fill(255);
     textFont(createFont(font, 12 * scaleFactor));
     textAlign(CENTER); 
     
-    noFill();
+    fill(c);
     stroke(c);
     beginShape();
+    
+    vertex(X,Y + plotHeight);
+    
     int difference = ceil(ymaxValue) - floor(yminValue);
     
     int intervals = floor(difference/yintervals);
     
     if(intervals == 0)
       intervals = 1;
+      
+    float finalXVal = X;
     
-    for (int val = xminValue, index = 0; val <= xmaxValue; val++, index++) {
-        float value = dataset[index];
+    for (int val = xminValue, index = 0; val < xmaxValue; val++, index++) {
+        Float value = dataset[index];
 
-        float xVal = (plotWidth * index)/(xmaxValue-xminValue); 
-        float yVal = (plotHeight * value)/difference;
+        Float xVal = (plotWidth * index)/(xmaxValue-xminValue); 
+        Float yVal = (plotHeight * value)/difference;
         
         strokeWeight(2 * scaleFactor);        
-        vertex(X + xVal, Y + plotHeight - yVal);        
+        vertex(X + xVal, Y + plotHeight - yVal); 
+        point(X + xVal, Y + plotHeight - yVal);
+        finalXVal = xVal;
+        //println(xVal +" , "+ yVal);  
     }
        
+    vertex(X + finalXVal,Y + plotHeight);
+    
     endShape();
     smooth();
     stroke(255);
+    
+    //axis
     
     for (int value = floor(yminValue), index = 0; value <= ceil(ymaxValue); value++, index++) {
        
@@ -134,7 +148,7 @@ class Chart{
      if (intervals == 0)
        intervals = 1;
      
-     for (int value = xminValue, index = 0; value <= xmaxValue; value++, index++) {
+     for (int value = xminValue, index = 0; value < xmaxValue; value++, index++) {
         
         if(index % intervals == 0){
 
@@ -155,12 +169,43 @@ class Chart{
           
         }
      }
+     
+    stroke(255);
+    strokeWeight(2 * scaleFactor);
+    line(X, Y - percentY(4), X, Y + plotHeight);
+    line(X, Y + plotHeight, X + plotWidth + percentX(1), Y + plotHeight);
+    noStroke();
     
     textFont(createFont(font, 12 * scaleFactor));
     textAlign(RIGHT);    
     text(labelx,X + plotWidth, Y + plotHeight + percentY(10));
     noFill();
   } 
+  
+  
+  public Float getMaxValue(Float[] numbers){  
+  Float maxValue = numbers[0];  
+  
+  for(int i=1;i < numbers.length;i++){  
+    if(numbers[i] > maxValue){  
+      maxValue = numbers[i];  
+    }  
+  }  
+    
+  return maxValue;  
+}  
+  
+public Float getMinValue(Float[] numbers){  
+  Float minValue = numbers[0];  
+  
+  for(int i=1;i<numbers.length;i++){  
+    if(numbers[i] < minValue){  
+      minValue = numbers[i];  
+    }  
+  }  
+  
+  return minValue;  
+}  
 
 }
 
