@@ -16,14 +16,16 @@ ControlsTab tabs;
 String currentTab;
 private static Map<String, Integer> weatherHashMap;
 private static Map<Integer, String> stateHashMap;
+Bimaps bimap;
 
 ArrayList<TileButton> buttons;
 Button qButton;
-ArrayList<DataBean> pointList;
+ArrayList<DataBean> pointList,statePointList;
 
 QueryBuilder execQuery;
 
 Boolean stateLevelZoom = null;
+Boolean countyLevelZoom = null;
 
 DataBean selectedPoint = null;
 //End of global vars
@@ -99,7 +101,7 @@ void setupGUIElements()
   textFont(plotFont);
   
   // init map
-  
+  bimap = new Bimaps();
   
   //sets width and height for the entire drawing canvas.
   float windowX1 = width*0.01;
@@ -310,13 +312,29 @@ void checkButtons(float xPos, float yPos)
 //Called whenever there is a zoom in/out. to call DB.
 void applyChanges()
 {
-    if(map.getZoom()>=7 && (stateLevelZoom==null || stateLevelZoom) ) //get point level data only if the map is zoomed > 5
+    println("mapzoom:"+map.getZoom());
+    if(map.getZoom()>=12  ) //get point level data only if the map is zoomed > 5
     {
+      println("ZOOOM IN:"+map.getZoom());
       pointList = execQuery.getPointsFromDB(2001);
-
+      
+    }
+    else if(map.getZoom()>=7 && map.getZoom()<12 && (countyLevelZoom==null || !countyLevelZoom))
+    {
+      println("County zoom IN:"+map.getZoom());
+      pointList = execQuery.getCountyPointsFromDB(2001);
     }
     else if(map.getZoom()<=6 && (stateLevelZoom==null || !stateLevelZoom))
     {
-      pointList = execQuery.getStatePointsFromDB(2001);
+      println("ZOOOM:"+map.getZoom());
+      if(statePointList==null)
+      {
+        pointList = execQuery.getStatePointsFromDB(2001);
+        statePointList = pointList;
+      }
+      else
+      {
+        pointList = statePointList;
+      }
     }
 }

@@ -68,6 +68,7 @@ public class TileButton
   private float height;
   private String label;
   public boolean isSelected;
+  color highlightcolor,basecolor,currentcolor,labelColor_unselected,labelColor_selected;
   
   public TileButton(float x, float y, float x2, float y2, String label)
   {
@@ -77,20 +78,32 @@ public class TileButton
     this.yPos2 = y2;
     this.label = label;
     this.isSelected = false;
+    this.highlightcolor = color(#3B3630);
+    this.basecolor = color(#4B443C);
+    this.currentcolor = basecolor;
+    this.labelColor_unselected = color(255);
+    this.labelColor_selected = color(#F0B30D);
   }
   
   public void draw()
   {
     pushStyle();
-    if (isSelected)
-      fill(64);
-    else
-      fill(128);
     rectMode(CORNERS);
-    rect(xPos1,yPos1,xPos2,yPos2);
+    fill(basecolor);
+    rect(xPos1,yPos1,xPos2,yPos2,5);
     textAlign(CENTER,CENTER);
-    fill(255);
-    text(label,xPos1,yPos1,xPos2,yPos2);
+    
+    if (isSelected)
+    {
+        fill(labelColor_selected);
+        text(label,xPos1,yPos1,xPos2,yPos2);
+    }
+    else
+    {
+      fill(labelColor_unselected);
+      text(label,xPos1,yPos1,xPos2,yPos2);
+    }
+    
     popStyle();
   }
   
@@ -99,9 +112,14 @@ public class TileButton
     if ( (x >= xPos1 && x <=xPos2 ) && (y >= yPos1 && y <= yPos2) )
     {
       if (isSelected)
+      {
         isSelected = false;
+      }
       else
+      {
         isSelected = true;
+        
+      }
       return 1;
     }
     return 0;

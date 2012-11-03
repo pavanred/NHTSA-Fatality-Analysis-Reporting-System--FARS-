@@ -97,6 +97,8 @@ public class DataBean  {
   
   private int _Weather_;
   
+  private String _countyName_;
+  
   //not present in table
   private int count; 
   
@@ -109,6 +111,11 @@ public class DataBean  {
   private boolean buttonState;
   
   private Boolean stateLevel=null;
+  
+  private Boolean countyLevel=null;
+  
+  private Integer stateCount;
+ 
   //not present in table
 
   public DataBean() {
@@ -255,7 +262,7 @@ public class DataBean  {
     return this._Longitude_;
   }
 
-  public void set_Longitude_(float _Longitude_) {
+  public void set_Longitude_( float _Longitude_) {
     this._Longitude_ = _Longitude_;
   }
 

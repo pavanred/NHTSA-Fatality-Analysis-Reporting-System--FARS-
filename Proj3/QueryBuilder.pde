@@ -19,6 +19,7 @@ class QueryBuilder
     }
   }
   
+  //To query DB for individual points on the map.
   ArrayList<DataBean> getPointsFromDB(int year)
   {
     println("querying..");
@@ -42,6 +43,116 @@ class QueryBuilder
     }
     println("returning results"+dbList.size());
     stateLevelZoom = false;
+    return dbList;
+  }
+  
+  //To query DB to get points on the state level.
+  ArrayList<DataBean> getCountyPointsFromDB(int year)
+  {
+    println("Querying....");
+//    HashMap<Integer,HashMap<Integer,DataBean>> ctList = getCountyCoordList(); //List used to get all county info.
+    float[] cl = getCurrentMapCoordinates();
+    String cq = getCoordQuery(cl);
+    String query = "SELECT State,County,count(*) FROM Data_All WHERE "+cq+" group by County";
+    db.query(query);
+    ArrayList<DataBean> dbList = new ArrayList<DataBean>();// List that is returned.
+    HashSet<Integer> hsState = new HashSet<Integer>();
+    HashSet<Integer> hs = new HashSet<Integer>();
+    println("Queried !");
+
+    while(db.next())
+    {
+      DataBean b = new DataBean();
+      int stid = db.getInt("State");
+      int count = db.getInt(3);
+      b._State_ = stid;
+      b._County_ = db.getInt("County");
+      b.count = count;
+      hsState.add(b._State_);
+      dbList.add(b);
+    }
+    String inputStates = Joiner.on(", ").join(hsState);
+    HashMap<Integer,HashMap<Integer,DataBean>> ctList = getCountyCoordList(inputStates);
+    ArrayList<DataBean> dbNewList = new ArrayList<DataBean>();
+    for(DataBean b : dbList)
+    {
+      HashMap<Integer,DataBean> hmOne = ctList.get(b._State_);
+      if(hmOne==null || !hmOne.containsKey(b._County_)) //TODO - Ignores the point if it does not have a matching county, should be fixed !!
+        continue;
+      DataBean ctBean = hmOne.get(b._County_);
+      b._Latitude_ = ctBean._Latitude_;
+      b._Longitude_ = ctBean._Longitude_;
+      b._countyName_ = ctBean._countyName_;
+      b.stateCount = 1000;
+      dbNewList.add(b);
+      hs.add(b._State_);
+    }
+        
+    println("Result set Size:"+dbNewList.size());
+    countyLevelZoom = true;
+    String states = Joiner.on(", ").join(hs);
+    println("States - "+states);
+    String totQ = "Select State,count(*) FROM Data_All WHERE State in ("+states+") GROUP BY State";
+    println("tot Q:"+ totQ);
+//    db.query(totQ);
+//    HashMap<Integer,Integer> stateWiseCount = new HashMap<Integer,Integer>();
+//    while(db.next())
+//    {
+//      stateWiseCount.put(db.getInt("State"),db.getInt(1));
+//    }
+    for(DataBean nb : dbNewList)
+    {
+      if(statePointList!=null)
+      {
+        for(DataBean bn : statePointList)
+        {
+          if(bn._State_== nb._State_)
+            nb.stateCount = bn.count;
+        }
+      }
+      //nb.stateCount = stateWiseCount.get(nb._State_);
+      println("nb.stateCount::"+nb.stateCount);
+    }
+    return dbNewList;
+  }
+  
+  //To query DB to get points on the state level.
+  ArrayList<DataBean> getStatePointsFromDB(int year)
+  {
+    HashMap<String,Location> stList = getStateCoordList();
+    getStateBiMap();
+    //String query = "SELECT State,count(*) FROM Data_"+year+" group by State"; 
+    String query = "SELECT State,count(*) FROM Data_All group by State";
+    db.query(query);
+    ArrayList<DataBean> dbList = new ArrayList<DataBean>();
+    while(db.next())
+    {
+      DataBean b = new DataBean();
+      int stid = db.getInt("State");
+      int count = db.getInt(2);
+      b._State_ = stid;
+      b.count = count;
+      dbList.add(b);
+    }
+    for(DataBean b : dbList)
+    {
+      String stateName = stateHashMap.get(b._State_);
+      Location l = stList.get(stateName);
+      b._Latitude_ = l.lat;
+      b._Longitude_ = l.lon;
+    }
+    stateLevelZoom = true;
+    DataBean dbTotal = new DataBean();
+    String totQ = "Select count(*) FROM Data_All";
+    db.query(totQ);
+    int totCount = 0;
+    while(db.next())
+    {
+      totCount = db.getInt(1);
+    }
+    dbTotal.count = totCount;
+    dbList.add(dbTotal);
+    println(dbTotal.count);
     return dbList;
   }
   
@@ -83,42 +194,38 @@ class QueryBuilder
     return q1+" "+q2;
   }
   
-  ArrayList<DataBean> getStatePointsFromDB(int year)
+  
+  
+  HashMap<Integer,HashMap<Integer,DataBean>> getCountyCoordList(String inputStates)
   {
-    HashMap<String,Location> stList = getStateCoordList();
-    getStateBiMap();
-    String query = "SELECT State,count(*) FROM Data_"+year+" group by State"; 
-    db.query(query);
-    ArrayList<DataBean> dbList = new ArrayList<DataBean>();
+    float[] cl = getCurrentMapCoordinates();
+    String cq = getCoordQuery(cl);
+    String qry = "SELECT StateId, CountyId, CountyName, Latitude, Longitude FROM County WHERE StateId in ("+inputStates+") AND "+cq+" ORDER BY CountyId";
+    println("input states query:"+qry);
+    db.query(qry);
+    HashMap<Integer,HashMap<Integer,DataBean>> countyListByState = new HashMap<Integer,HashMap<Integer,DataBean>>(); 
+    println("Got counties");
     while(db.next())
     {
-      DataBean b = new DataBean();
-      int stid = db.getInt("State");
-      int count = db.getInt(2);
-      b._State_ = stid;
-      b.count = count;
-      dbList.add(b);
+      DataBean mydata = new DataBean();
+      mydata._State_ = db.getInt("StateId");
+      mydata._County_ = db.getInt("CountyId");
+      mydata._countyName_ = db.getString("CountyName");
+      mydata._Latitude_ = db.getFloat("Latitude");
+      mydata._Longitude_ = db.getFloat("Longitude");
+      if(countyListByState.containsKey(mydata._State_))
+      {
+        HashMap<Integer,DataBean> b = countyListByState.get(mydata._State_);
+        b.put(mydata._County_,mydata);
+      }
+      else
+      {
+        HashMap<Integer,DataBean> nb = new HashMap<Integer,DataBean>();
+        nb.put(mydata._County_,mydata);
+        countyListByState.put(mydata._State_,nb);
+      }
     }
-    for(DataBean b : dbList)
-    {
-      String stateName = stateHashMap.get(b._State_);
-      Location l = stList.get(stateName);
-      b._Latitude_ = l.lat;
-      b._Longitude_ = l.lon;
-    }
-    stateLevelZoom = true;
-    DataBean dbTotal = new DataBean();
-    String totQ = "Select count(*) FROM Data_"+year;
-    db.query(totQ);
-    int totCount = 0;
-    while(db.next())
-    {
-      totCount = db.getInt(1);
-    }
-    dbTotal.count = totCount;
-    dbList.add(dbTotal);
-    println(dbTotal.count);
-    return dbList;
+    return countyListByState;
   }
   
   HashMap<String,Location> getStateCoordList()
@@ -287,5 +394,5 @@ class QueryBuilder
     stateHashMap.put(54,"WestVirginia");
     stateHashMap.put(55,"Wisconsin");
     stateHashMap.put(56,"Wyoming");
-  }  
+  }
 }

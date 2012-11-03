@@ -75,7 +75,7 @@ class MapArea
     
     pushStyle();
     if(pointList!=null){
-      if(map.getZoom()>=7)
+      if(map.getZoom()>=12)
       {
         float ellipseSize = 10*scaleFactor;
         for(DataBean b : pointList)
@@ -90,9 +90,35 @@ class MapArea
           b.dia = ellipseSize;
           ellipse(p.x, p.y, ellipseSize, ellipseSize);
         }
+        countyLevelZoom = false;
+        stateLevelZoom = false;
       }
-      
-      else //Data points will be list of states
+      else if(map.getZoom()<12 && map.getZoom()>=7 && (countyLevelZoom!=null && countyLevelZoom)) //Data poinst will be list of counties
+      {
+        float ellipseSize = map.getZoom()*5;
+        for(DataBean b : pointList)
+          {
+            if(b==null)
+              continue;
+            Location l = new Location(b.get_Latitude_(), b.get_Longitude_());
+            Point2f p = map.locationPoint(l);
+            fill(#464545,200);
+            noStroke();
+            ellipse(p.x, p.y, ellipseSize, ellipseSize);
+            fill(#D32929,200);
+            float convVal = map(b.count, 0, b.stateCount, 0, 360);
+            arc(p.x,p.y,ellipseSize,ellipseSize,0,radians(convVal));
+            fill(#ffffff);
+            textSize(ellipseSize*0.2*scaleFactor);
+            b.dia = ellipseSize;
+            b.x = p.x;
+            b.y = p.y;
+            b.countyLevel = true;
+            textAlign(CENTER,CENTER);
+            text(b._countyName_+"\n"+b.count,p.x,p.y);
+          }
+      }
+      else if(stateLevelZoom) //Data points will be list of states
       {
           float ellipseSize = map.getZoom()*10;
           for(DataBean b : pointList)

@@ -63,7 +63,7 @@ class GUI
     rect(graphX1,graphY1,graphX2,graphY2);
     
      //rect(graphX1,graphY1,graphX2,graphY2);
-    chartArea.draw();    
+    //chartArea.draw();    
 
     rect(controlsX1,controlsY1,controlsX2,controlsY2);
     tabs.draw();
@@ -122,14 +122,20 @@ class GUI
     fill(255);
     if(selectedPoint!=null)
     {
-      if(selectedPoint.stateLevel)
+      if(selectedPoint.stateLevel!=null && selectedPoint.stateLevel)
       {
-      float w = (detailsX2 - detailsX1)*0.5;
-      float h = (detailsY1+detailsY2)/4;
-      text(stateHashMap.get(selectedPoint._State_),detailsX1+w,detailsY1+h);
+        float w = (detailsX2 - detailsX1)*0.5;
+        float h = (detailsY1+detailsY2)/4;
+        text(stateHashMap.get(selectedPoint._State_),detailsX1+w,detailsY1+h);
       }
-      if(!selectedPoint.stateLevel)
-      text("Lat:"+selectedPoint._Latitude_+",Lon:"+selectedPoint._Longitude_,detailsX1+50,detailsY1+50);
+      else if(countyLevelZoom!=null && countyLevelZoom)
+      {
+        float w = (detailsX2 - detailsX1)*0.5;
+        float h = (detailsY1+detailsY2)/4;
+        text(selectedPoint._countyName_,detailsX1+w,detailsY1+h);
+      }
+      else
+        text("Lat:"+selectedPoint._Latitude_+",Lon:"+selectedPoint._Longitude_,detailsX1+50,detailsY1+50);
     }
     popStyle();
   }
