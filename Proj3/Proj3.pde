@@ -21,6 +21,7 @@ Bimaps bimap;
 ArrayList<TileButton> buttons;
 Button qButton;
 ArrayList<DataBean> pointList,statePointList;
+Filters searchCriteria;
 
 QueryBuilder execQuery;
 

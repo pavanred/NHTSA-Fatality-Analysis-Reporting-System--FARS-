@@ -25,18 +25,18 @@ class QueryBuilder
     println("querying..");
     float[] clist = getCurrentMapCoordinates();
     String qc = getCoordQuery(clist);
+    String whereClause = constructWhereClause();
      //qc="";
-    String query = "SELECT * FROM Data_"+year+" WHERE "+qc;
+    String query = "SELECT Latitude,Longitude,State,County,Year FROM Data_All WHERE "+ qc + whereClause;
     println(query);
     db.query(query);
     ArrayList<DataBean> dbList = new ArrayList<DataBean>();
     while(db.next())
     {
-      float lat = db.getFloat("Latitude");
-      float lon = db.getFloat("Longitude");
       DataBean b = new DataBean();
-      b.set_Latitude_(lat);
-      b.set_Longitude_(lon);
+      
+      b.set_Latitude_(db.getFloat("Latitude"));
+      b.set_Longitude_(db.getFloat("Longitude"));
       b.set_State_(db.getInt("State"));
       b.set_County_(db.getInt("County"));
       dbList.add(b);
@@ -188,10 +188,46 @@ class QueryBuilder
   }
   
   String getCoordQuery(float[] clist)
-  {
-    String q2 =" and Longitude between "+clist[2]+" and "+clist[3];
-    String q1 ="  Latitude between "+clist[1]+" and "+clist[0];
-    return q1+" "+q2;
+  {    
+    String q1 ="  Latitude between "+clist[1]+" and "+clist[0] + 
+              " and Longitude between "+clist[2]+" and "+clist[3];
+    
+    return q1;
+  }
+  
+  String constructWhereClause(){
+   
+    StringBuilder filters = new StringBuilder();
+    
+    filters.append(" AND ");
+    
+    if(searchCriteria.Weather != 99)
+      filters.append(" Weather = " + searchCriteria.Weather);
+     
+    if(searchCriteria.SpeedCategory != -1)
+      filters.append(" Speed_Category = " + searchCriteria.SpeedCategory);
+     
+    if(searchCriteria.LightCondition != 99)
+      filters.append(" LightCondition = " + searchCriteria.LightCondition);
+     
+    if(searchCriteria.VehicleType != -1)
+      filters.append(" VehicleType = " + searchCriteria.VehicleType); 
+    
+    if(searchCriteria.AgeCategory != -1)
+      filters.append(" AgeCategory = " + searchCriteria.AgeCategory);
+    
+    if(searchCriteria.AgeCategory != -1)
+      filters.append(" Alcohol_Category = " + searchCriteria.AlcoholCategory);
+    
+    if(searchCriteria.CrashHour != -1)
+      filters.append(" (CrashHour " + getCrashHourfilter());
+      
+    if(searchCriteria.Sex != 0)
+      filters.append(" Sex " + searchCriteria.Sex);
+    
+    filters.append(" 1 = 1 ");
+    
+    return filters.toString();
   }
   
   
@@ -394,5 +430,29 @@ class QueryBuilder
     stateHashMap.put(54,"WestVirginia");
     stateHashMap.put(55,"Wisconsin");
     stateHashMap.put(56,"Wyoming");
+  }
+  
+  String getCrashHourfilter(){
+   
+    String condition;
+    
+   switch(searchCriteria.CrashHour){
+    
+    case 0:
+      condition = " between 5 and 12) ";
+    case 1:
+      condition = " between 13 and 17) ";
+    case 2:
+      condition = " between 18 and 21) ";
+    case 3:
+      condition = " between 22 and 24 OR CrashHour between 0 and 4) ";
+    case 4: 
+      condition = " > 24) ";
+    default :
+      condition = " between 5 and 12) "; 
+         
+   }   
+   return condition;
+    
   }
 }
