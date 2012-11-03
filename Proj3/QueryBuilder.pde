@@ -27,7 +27,7 @@ class QueryBuilder
     String qc = getCoordQuery(clist);
     String whereClause = constructWhereClause();
      //qc="";
-    String query = "SELECT Latitude,Longitude,State,County,Year FROM Data_All WHERE "+ qc + whereClause;
+    String query = "SELECT Distinct(CaseNumber),Latitude,Longitude,State,County,Year FROM Data_All WHERE "+ qc + whereClause;
     println(query);
     db.query(query);
     ArrayList<DataBean> dbList = new ArrayList<DataBean>();
