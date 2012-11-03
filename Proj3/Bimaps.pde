@@ -19,6 +19,7 @@ class Bimaps{
   
    weatherList = HashBiMap.create();
    
+   weatherList.put(99,"All");
    weatherList.put(100,"Clear");
    weatherList.put(101,"Rainy");
    weatherList.put(102,"Windy");
@@ -33,6 +34,7 @@ class Bimaps{
   
    speedList = HashBiMap.create();
    
+   speedList.put(-1,"All");
    speedList.put(0,"Stationary");
    speedList.put(1,"0 - 50");
    speedList.put(2,"51 - 100");
@@ -46,6 +48,7 @@ class Bimaps{
   
    lightList = HashBiMap.create();
    
+   lightList.put(99,"All");
    lightList.put(100,"Day light");
    lightList.put(101,"Dim");
    lightList.put(102,"Dark");
@@ -58,6 +61,7 @@ class Bimaps{
   
    vehicleList = HashBiMap.create();
    
+   vehicleList.put(-1,"All");
    vehicleList.put(0,"Two wheelers");
    vehicleList.put(1,"Passenger cars");
    vehicleList.put(2,"Utility vehicles");
@@ -72,6 +76,7 @@ class Bimaps{
   
    ageList = HashBiMap.create();
    
+   ageList.put(-1,"All");
    ageList.put(0,"0 - 18");
    ageList.put(1,"19 - 40");
    ageList.put(2,"41 - 60");
@@ -85,6 +90,7 @@ class Bimaps{
   
    alcoholList = HashBiMap.create();
    
+   alcoholList.put(-1,"All");
    alcoholList.put(0,"Sober");
    alcoholList.put(1,"Mildly drunk");
    alcoholList.put(2,"Heavily drunk");
@@ -97,6 +103,7 @@ class Bimaps{
   
    dayList = HashBiMap.create();
    
+   dayList.put(-1,"All");
    dayList.put(0,"Weekdays");
    dayList.put(1,"Weekends");
    dayList.put(2,"Holidays");
@@ -109,6 +116,7 @@ class Bimaps{
   
    monthList = HashBiMap.create();
    
+   monthList.put(0,"All");
    monthList.put(1,"January");
    monthList.put(2,"February");
    monthList.put(3,"March");
@@ -130,6 +138,7 @@ class Bimaps{
   
    hourOfDayList = HashBiMap.create();
    
+   hourOfDayList.put(-1,"All");
    hourOfDayList.put(0,"Morning");
    hourOfDayList.put(1,"Afternoon");
    hourOfDayList.put(2,"Evening");
@@ -144,8 +153,10 @@ class Bimaps{
   
    sexList = HashBiMap.create();
    
+   sexList.put(0,"All");
    sexList.put(1,"Male");
    sexList.put(2,"Female");
+   sexList.put(3,"Unknown");
    //hourOfDayList.put(9,"Night");
    //hourOfDayList.put(.,"Unknown");
    
