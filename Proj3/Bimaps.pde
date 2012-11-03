@@ -10,7 +10,9 @@ class Bimaps{
  BiMap<Integer, String> dayList;
  BiMap<Integer, String> monthList;
  BiMap<Integer, String> hourOfDayList;
+
  BiMap<Integer, String> sexList;
+
  //BiMap<String, Location> countylist;
 
  public BiMap<Integer,String> getWeatherBimap(){
@@ -137,6 +139,7 @@ class Bimaps{
    return hourOfDayList;   
  }
  
+
  public BiMap<Integer,String> getSexBimap(){
   
    sexList = HashBiMap.create();
@@ -149,6 +152,7 @@ class Bimaps{
    return sexList;
  }
  
+
  /*public BiMap<String,Location> getCountyBimap(){
   
    countylist = HashBiMap.create();
