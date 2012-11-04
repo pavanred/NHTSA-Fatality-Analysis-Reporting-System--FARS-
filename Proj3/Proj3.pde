@@ -129,7 +129,7 @@ void setupGUIElements()
   tabs = new ControlsTab(gui.controlsX1,gui.controlsY1,gui.controlsX2,gui.tabH);
   lastZoom = 5;
   
-  searchCriteria = new Filters();
+  
 }
 
 void draw()
@@ -184,7 +184,7 @@ void touchMove(int ID, float xPos, float yPos, float xWidth, float yWidth){
   noFill();
   stroke(0,255,0);
   ellipse( xPos, yPos, xWidth * 2, yWidth * 2 );
-  
+  gui.slider.updateSlider(xPos,yPos);
   //Acts on the map only if lies within map area.
   if(isWithinMap(xPos,yPos)){
     if( touchList.size() < 2 ){
@@ -310,6 +310,8 @@ void checkButtons(float xPos, float yPos)
     }
   }
   tabs.updateTabs(xPos,yPos);
+  
+  gui.slider.updateSlider(xPos,yPos);
 }
 
 //Called whenever there is a zoom in/out. to call DB.

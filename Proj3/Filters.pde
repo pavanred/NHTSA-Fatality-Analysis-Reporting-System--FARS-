@@ -3,10 +3,14 @@ class Filters{
  
  Filters(){
    this.searchFilter = new HashMap<Integer,ArrayList<Integer>>();
+   this.currentMinYear = 2000;
+   this.currentMaxYear = 2010;
  }  //
  
  Filters(HashMap<Integer,ArrayList<Integer>> searchFilter){   //setting default search criteria
    this.searchFilter = searchFilter;
+   this.currentMinYear = 2000;
+   this.currentMaxYear = 2010;
  }
   
  /*int Weather;
@@ -20,6 +24,7 @@ class Filters{
  
  HashMap<Integer,ArrayList<Integer>> searchFilter;
  Integer selectedButton;
+ Integer currentMinYear,currentMaxYear;
  
  void setSelectedButton(Integer val)
  {

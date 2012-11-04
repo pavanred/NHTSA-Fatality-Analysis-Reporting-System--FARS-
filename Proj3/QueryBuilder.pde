@@ -83,7 +83,7 @@ class QueryBuilder
       b._Latitude_ = ctBean._Latitude_;
       b._Longitude_ = ctBean._Longitude_;
       b._countyName_ = ctBean._countyName_;
-      b.stateCount = 1000;
+      b.stateCount = -1;
       dbNewList.add(b);
       hs.add(b._State_);
     }
@@ -116,7 +116,7 @@ class QueryBuilder
     float[] cl = getCurrentMapCoordinates();
     String cq = getCoordQuery(cl);
     //String query = "SELECT State,count(*) FROM Data_"+year+" group by State"; 
-    String query = "SELECT State,count(*) FROM Data_All group by State";
+    String query = "SELECT State,count(*) FROM Data_All group by State order by count(*) DESC";
     println(query);
     db.query(query);
     ArrayList<DataBean> dbList = new ArrayList<DataBean>();
@@ -431,6 +431,7 @@ class QueryBuilder
     stateHashMap.put(54,"WestVirginia");
     stateHashMap.put(55,"Wisconsin");
     stateHashMap.put(56,"Wyoming");
+
   }
   
   String getCrashHourfilter(){
@@ -455,5 +456,65 @@ class QueryBuilder
    }   */
    return condition;
     
+  }
+  
+  BiMap getDisplayStates()
+  {
+    BiMap displayStateMap = HashBiMap.create();
+    displayStateMap.put(1,"AL");
+    displayStateMap.put(2,"AK");
+    displayStateMap.put(4,"AZ");
+    displayStateMap.put(5,"AR");
+    displayStateMap.put(6,"CA");
+    displayStateMap.put(8,"CO");
+    displayStateMap.put(9,"CT");
+    displayStateMap.put(10,"DE");
+    displayStateMap.put(11,"DC");
+    displayStateMap.put(12,"FL");
+    displayStateMap.put(13,"GA");
+    displayStateMap.put(15,"HI");
+    displayStateMap.put(16,"ID");
+    displayStateMap.put(17,"IL");
+    displayStateMap.put(18,"IN");
+    displayStateMap.put(19,"IA");
+    displayStateMap.put(20,"KS");
+    displayStateMap.put(21,"KY");
+    displayStateMap.put(22,"LA");
+    displayStateMap.put(23,"ME");
+    displayStateMap.put(24,"MD");
+    displayStateMap.put(25,"MA");
+    displayStateMap.put(26,"MI");
+    displayStateMap.put(27,"MN");
+    displayStateMap.put(28,"MS");
+    displayStateMap.put(29,"MO");
+    displayStateMap.put(30,"MT");
+    displayStateMap.put(31,"NE");
+    displayStateMap.put(32,"NV");
+    displayStateMap.put(33,"NH");
+    displayStateMap.put(34,"NJ");
+    displayStateMap.put(35,"NM");
+    displayStateMap.put(36,"NY");
+    displayStateMap.put(37,"NC");
+    displayStateMap.put(38,"ND");
+    displayStateMap.put(39,"OH");
+    displayStateMap.put(40,"OK");
+    displayStateMap.put(41,"OR");
+    displayStateMap.put(42,"PA");
+    displayStateMap.put(43,"PR");
+    displayStateMap.put(44,"RI");
+    displayStateMap.put(45,"SC");
+    displayStateMap.put(46,"SD");
+    displayStateMap.put(47,"TN");
+    displayStateMap.put(48,"TX");
+    displayStateMap.put(49,"UT");
+    displayStateMap.put(50,"VT");
+    displayStateMap.put(51,"VA");
+    displayStateMap.put(52,"VI");
+    displayStateMap.put(53,"WA");
+    displayStateMap.put(54,"WV");
+    displayStateMap.put(55,"WI");
+    displayStateMap.put(56,"WY");
+
+    return displayStateMap;
   }
 }

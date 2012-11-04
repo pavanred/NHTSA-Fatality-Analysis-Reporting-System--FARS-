@@ -128,25 +128,53 @@ class MapArea
       }
       else if(map.getZoom()<7) //Data points will be list of states
       {
-          float ellipseSize = map.getZoom()*10;
-          for(DataBean b : pointList)
+          if(map.getZoom()>5){
+            float ellipseSize = map.getZoom()*7.5;
+            for(DataBean b : pointList)
+            {
+              Location l = new Location(b.get_Latitude_(), b.get_Longitude_());
+              Point2f p = map.locationPoint(l);
+              fill(#464545,200);
+              noStroke();
+              ellipse(p.x, p.y, ellipseSize, ellipseSize);
+              fill(#D32929,200);
+              float convVal = map(b.count, 0, pointList.get(pointList.size()-1).count, 0, 360);
+              arc(p.x,p.y,ellipseSize,ellipseSize,0,radians(convVal));
+              fill(#ffffff);
+              b.dia = ellipseSize;
+              b.x = p.x;
+              b.y = p.y;
+              b.stateLevel = true;
+              textAlign(CENTER,CENTER);
+              text(execQuery.getDisplayStates().get(b._State_)+"\n"+b.count,p.x,p.y);
+            }
+          }
+          else
           {
-            Location l = new Location(b.get_Latitude_(), b.get_Longitude_());
-            Point2f p = map.locationPoint(l);
-            fill(#464545,200);
-            noStroke();
-            ellipse(p.x, p.y, ellipseSize, ellipseSize);
-            fill(#D32929,200);
-            float convVal = map(b.count, 0, pointList.get(pointList.size()-1).count, 0, 360);
-            arc(p.x,p.y,ellipseSize,ellipseSize,0,radians(convVal));
-            fill(#ffffff);
-            textSize(ellipseSize*0.2*scaleFactor);
-            b.dia = ellipseSize;
-            b.x = p.x;
-            b.y = p.y;
-            b.stateLevel = true;
-            textAlign(CENTER,CENTER);
-            text(stateHashMap.get(b._State_)+"\n"+b.count,p.x,p.y);
+            float ellipseSize = map.getZoom()*10;
+            int count=0;
+            for(DataBean b : pointList)
+            {
+              if(count==10)
+                break;
+              Location l = new Location(b.get_Latitude_(), b.get_Longitude_());
+              Point2f p = map.locationPoint(l);
+              fill(#464545,200);
+              noStroke();
+              ellipse(p.x, p.y, ellipseSize, ellipseSize);
+              fill(#D32929,200);
+              float convVal = map(b.count, 0, pointList.get(pointList.size()-1).count, 0, 360);
+              arc(p.x,p.y,ellipseSize,ellipseSize,0,radians(convVal));
+              fill(#ffffff);
+              textSize(ellipseSize*0.2*scaleFactor);
+              b.dia = ellipseSize;
+              b.x = p.x;
+              b.y = p.y;
+              b.stateLevel = true;
+              textAlign(CENTER,CENTER);
+              text((count+1)+"."+execQuery.getDisplayStates().get(b._State_)+"\n"+b.count,p.x,p.y);
+              count++;
+            }
           }
       }
     }
@@ -193,5 +221,12 @@ class MapArea
     colorArray[15] = 0xFF8A2F4B;//FFFFFFFF;
     colorArray[16] = 0xFF075B0F;//0xFF0A8115;//0xFF0EAD1C;//FFFFB432;//FFFFFFFF;
     colorArray[17] = 0xFFFF6232;//FF531E;//FF6232;//FFFFFFFF;
+  }
+  
+  ArrayList<String> mapStatesOut()
+  {
+    String[] m = {"Virginia", "Maryland", "District of Columbia", "Pennsylvania", "Delaware", "NewJersey", "Connecticut", "RhodeIsland", "Massachusetts", "NewHampshire", "Vermont"};
+    ArrayList<String> l = new ArrayList<String>(Arrays.asList(m));   
+    return l; 
   }
 }
