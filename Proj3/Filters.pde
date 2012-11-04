@@ -7,10 +7,13 @@ class Filters{
    this.currentMaxYear = 2010;
  }  //
  
- Filters(HashMap<Integer,ArrayList<Integer>> searchFilter){   //setting default search criteria
+
+ Filters(HashMap<Integer,ArrayList<Integer>> searchFilter, int selected){   //setting default search criteria
    this.searchFilter = searchFilter;
    this.currentMinYear = 2000;
    this.currentMaxYear = 2010;
+   setSelectedButton(selected);
+
  }
   
  /*int Weather;
@@ -29,6 +32,8 @@ class Filters{
  void setSelectedButton(Integer val)
  {
    this.selectedButton = val;
+   //QueryBuilder qb = new QueryBuilder();
+   //barChartData = qb.getCrashesByGroup(val);
  }
  
  Integer getSelectedButton()

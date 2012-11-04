@@ -10,7 +10,7 @@ class GUI
   float detailsX1,detailsY1,detailsX2,detailsY2;
   float sliderX1,sliderX2,sliderY1,sliderY2;
   float tabW,tabH;
-  ChartArea chartArea;
+  
   ListBox lb;
   YearSlider slider;
   GUI(float x1, float y1, float x2, float y2)
@@ -67,14 +67,13 @@ class GUI
     
     rect(0,0,width/2,height); // to hide extra map drawn. TODO - find a better way.
     
-    rect(graphX1,graphY1,graphX2,graphY2);
-    
-     //rect(graphX1,graphY1,graphX2,graphY2);
-    //chartArea.draw();    
+    //rect(graphX1,graphY1,graphX2,graphY2);
+    chartArea.draw(); 
+     //rect(graphX1,graphY1,graphX2,graphY2);       
 
-    rect(controlsX1,controlsY1,controlsX2,controlsY2);
-    tabs.draw();
-    
+    //rect(controlsX1,controlsY1,controlsX2,controlsY2);
+    tabs.draw();    
+    barChartArea.draw();
     
     fill(0,200);
     rect(detailsX1,detailsY1,detailsX2,detailsY2);
@@ -104,13 +103,14 @@ class GUI
     buttons.add(b);
     
     chartArea = new ChartArea(graphX1,graphY1,graphX2,graphY2); //init for chartarea.
+
     
-    searchCriteria = new Filters();
+    //searchCriteria = new Filters();
     
     //slider = new YearSlider(width-(width*0.75),height-200,width-(width*0.25),height-150,2000,2011);
     slider = new YearSlider(sliderX1,sliderY1,sliderX2,sliderY2,2000,2011);
-    
-    
+    barChartArea = new BarChartArea(controlsX1 + percentX(6),controlsY1 + percentY(14),controlsX2 + percentX(17),controlsY2);
+
   }
   
   void drawControls()
@@ -150,6 +150,7 @@ class GUI
     popStyle();
   }
 }
+
 
 class YearSlider
 {
@@ -275,3 +276,4 @@ class YearSlider
     return map(searchCriteria.currentMaxYear,yearMin,yearMax,x,x2);
   }
 }
+

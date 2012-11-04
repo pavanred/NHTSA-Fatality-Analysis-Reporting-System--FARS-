@@ -117,7 +117,7 @@ class Bimaps{
   
    monthList = HashBiMap.create();
    
-   monthList.put(0,"All");
+   monthList.put(-1,"All");
    monthList.put(1,"January");
    monthList.put(2,"February");
    monthList.put(3,"March");
@@ -130,7 +130,7 @@ class Bimaps{
    monthList.put(10,"October");
    monthList.put(11,"November");
    monthList.put(12,"December");
-   monthList.put(13,"Unknown");
+   monthList.put(0,"Unknown");
    
    return monthList;   
  }

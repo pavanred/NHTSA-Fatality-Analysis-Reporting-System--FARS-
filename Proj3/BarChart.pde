@@ -25,6 +25,7 @@ class BarChart{
   
   float[] dataset;
   int[] xIds; 
+  String[] labels;
   
   String font = "Verdana";
 
@@ -48,11 +49,13 @@ class BarChart{
 
    dataset = new float[data.size()];
    xIds = new int[data.size()];
+   labels = new String[data.size()];
    
    for(int index = 0; index < data.size(); index++){
     
     dataset[index] = data.get(index).Value;
     xIds[index] = data.get(index).Key;
+    labels[index] = data.get(index).Desc;
      
    }
         
@@ -103,7 +106,7 @@ class BarChart{
         pushMatrix();
         translate(X + xVal + (padding*0.75), Y + plotHeight + textPadding);
         rotate(radians(-45));
-        text ("test",0,0);
+        text (labels[index],0,0);
         popMatrix();
      
     }
@@ -134,7 +137,7 @@ class BarChart{
     
     stroke(255);
     strokeWeight(2 * scaleFactor);
-    line(X, Y - percentY(4), X, Y + plotHeight);
+    line(X, Y, X, Y + plotHeight);
     line(X, Y + plotHeight, X + plotWidth + percentX(2), Y + plotHeight);
     
     noStroke();
