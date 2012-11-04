@@ -61,6 +61,7 @@ class ControlsTab
   
   void updateTabs(float mx, float my)
   {
+    Group selectedGroup = null;
     if(mx>tabLeft && mx<tabRight && my > tabTop && my<tabBottom)
     {
       for(Tab t : tabList)
@@ -70,9 +71,31 @@ class ControlsTab
     }
     else //Update the buttons inside the  tab.
     {
+      Boolean noneSelected = true;
       for(Group gp : selectedTab.groupLists)
       {
-        gp.updateGroupButton(mx,my);
+        if(gp.isSelected)
+        {
+          noneSelected = false;
+          selectedGroup = gp;
+        }
+        //gp.updateGroupButton(mx,my);
+      }
+      if(noneSelected)
+      {
+        for(Group gp : selectedTab.groupLists)
+        {
+          gp.updateGroupButton(mx,my);
+        }
+      }
+      else
+      {
+        for(Group gp : selectedTab.groupLists)
+        {
+          gp.updateGroupTileButtons(mx,my);
+        }
+        if(selectedGroup!=null && selectedGroup.isSelected)
+          selectedGroup.updateGroupButton(mx,my);
       }
     }
   }

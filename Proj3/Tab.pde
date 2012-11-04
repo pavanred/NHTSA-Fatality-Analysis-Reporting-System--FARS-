@@ -1,3 +1,4 @@
+HashMap<String,String> selectedFilters = new HashMap<String,String>();
 class Tab
 {
   String name;
@@ -199,9 +200,10 @@ class Group
   String name;
   int value;
   BiMap<Integer,String> itemsList;
-  boolean isSelected;
+  Boolean isSelected = false;
   color highlightcolor,basecolor,currentcolor,labelColor_unselected,labelColor_selected;
   ArrayList<TileButton> tb;
+  TileButton selectedTileButton;
   
   Group(String groupName, float gx1, float gy1, float gx2, float gy2,BiMap<Integer,String> itemsList)
   {
@@ -217,6 +219,7 @@ class Group
     this.labelColor_unselected = color(255);
     this.labelColor_selected = color(#F0B30D);
     tb = new ArrayList<TileButton>();
+    this.value = bimap.getFiltersBimap().get(name);
     setup();
   }
   
@@ -230,6 +233,7 @@ class Group
       for(Integer item : itemsList.keySet())
       {
         TileButton b = new TileButton(currentX,currentY,currentX+itemWidth,currentY+itemHeight,itemsList.get(item));
+        b.value = item;
         tb.add(b);
         currentY += itemHeight;
       }
@@ -262,12 +266,43 @@ class Group
     {
       currentcolor = highlightcolor;
       currentTab = name;
-      isSelected = true;
+      if(!isSelected)
+      {
+        isSelected = true;
+        searchCriteria.setSelectedButton(bimap.getFiltersBimap().get(name));
+      }
+      else
+        isSelected = false;
     }
     else
     {
       currentcolor = basecolor;
       isSelected = false;
     }
+  }
+
+  void updateGroupTileButtons(float mx, float my)
+  {
+    for(TileButton tileButton : tb)
+    {
+      if(tileButton.touch(mx,my)==1)
+      {
+        selectedTileButton = tileButton;
+        println("tileButton::"+tileButton.label);
+        HashMap<Integer,ArrayList<Integer>> f = searchCriteria.searchFilter;
+        if(f.containsKey(value))
+        {
+          ArrayList<Integer> l = f.get(value);
+          l.add(tileButton.value);
+        }
+        else
+        {
+          ArrayList<Integer> l = new ArrayList<Integer>();
+          l.add(tileButton.value);
+          f.put(value,l);
+        }
+      }
+    }
+    println("searchCriteria.searchFilter::"+searchCriteria.searchFilter);    
   }
 }

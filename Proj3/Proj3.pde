@@ -28,6 +28,8 @@ QueryBuilder execQuery;
 Boolean stateLevelZoom = null;
 Boolean countyLevelZoom = null;
 
+int lastZoom;
+
 DataBean selectedPoint = null;
 //End of global vars
 
@@ -113,7 +115,6 @@ void setupGUIElements()
   
   mapSize = new PVector( width/2, height );
   mapOffset = new PVector(width/2, 0 );  
-  println(gui.mapY2-gui.mapY1);
   map = new InteractiveMap(this, new Microsoft.AerialProvider(),mapOffset.x, mapOffset.y, mapSize.x, mapSize.y ); // does not work when put inside MapArea constructor
   mapArea = new MapArea(mapSize,mapOffset);
   
@@ -126,7 +127,9 @@ void setupGUIElements()
   execQuery.checking();
   applyChanges();
   tabs = new ControlsTab(gui.controlsX1,gui.controlsY1,gui.controlsX2,gui.tabH);
-
+  lastZoom = 5;
+  
+  searchCriteria = new Filters();
 }
 
 void draw()
@@ -298,12 +301,11 @@ void checkButtons(float xPos, float yPos)
   }
   if(pointList!=null)
   {
-    println(xPos+"-"+yPos);
     for(DataBean b : pointList)
     {
       if(b.updateButton(xPos,yPos))
       {
-        selectedPoint = b;        
+        selectedPoint = b;       
       }
     }
   }
@@ -314,20 +316,27 @@ void checkButtons(float xPos, float yPos)
 void applyChanges()
 {
     println("mapzoom:"+map.getZoom());
-    if(map.getZoom()>=12  ) //get point level data only if the map is zoomed > 5
+    if(map.getZoom()>=11  && map.getZoom()!= lastZoom) //get point level data only if the map is zoomed > 5
     {
       println("ZOOOM IN:"+map.getZoom());
       pointList = execQuery.getPointsFromDB(2001);
+      lastZoom = map.getZoom();
       
     }
-    else if(map.getZoom()>=7 && map.getZoom()<12 && (countyLevelZoom==null || !countyLevelZoom))
+    //else if(map.getZoom()>=7 && map.getZoom()<12 && (countyLevelZoom==null || !countyLevelZoom))
+    else if(map.getZoom()>=7 && map.getZoom()<11 && map.getZoom()!= lastZoom)
     {
       println("County zoom IN:"+map.getZoom());
       pointList = execQuery.getCountyPointsFromDB(2001);
+      lastZoom = map.getZoom();
     }
-    else if(map.getZoom()<=6 && (stateLevelZoom==null || !stateLevelZoom))
+    //else if(map.getZoom()<=6 && (stateLevelZoom==null || !stateLevelZoom))
+    else if(map.getZoom()<=6 && map.getZoom()!= lastZoom)
     {
       println("ZOOOM:"+map.getZoom());
+      //pointList = execQuery.getStatePointsFromDB(2001);
+        //statePointList = pointList;
+      lastZoom = map.getZoom();
       if(statePointList==null)
       {
         pointList = execQuery.getStatePointsFromDB(2001);
@@ -335,6 +344,7 @@ void applyChanges()
       }
       else
       {
+        println("size:"+statePointList.size());
         pointList = statePointList;
       }
     }

@@ -68,6 +68,7 @@ public class TileButton
   private float height;
   private String label;
   public boolean isSelected;
+  private int value;
   color highlightcolor,basecolor,currentcolor,labelColor_unselected,labelColor_selected;
   
   public TileButton(float x, float y, float x2, float y2, String label)

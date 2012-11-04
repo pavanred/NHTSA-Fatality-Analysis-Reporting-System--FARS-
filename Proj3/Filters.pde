@@ -1,27 +1,33 @@
 
 class Filters{
  
- Filters(){}  //
+ Filters(){
+   this.searchFilter = new HashMap<Integer,ArrayList<Integer>>();
+ }  //
  
- Filters(int weather, int speedCategory, int lightCondition, int vehicleType, int ageCategory, int alcoholCategory, int crashHour, int sex){   //setting default search criteria
-   
-   Weather = weather;
-   SpeedCategory = speedCategory;
-   LightCondition = lightCondition;
-   VehicleType = vehicleType;
-   AgeCategory = ageCategory;
-   AlcoholCategory = alcoholCategory;
-   CrashHour = crashHour;
-   Sex = sex;
-   
+ Filters(HashMap<Integer,ArrayList<Integer>> searchFilter){   //setting default search criteria
+   this.searchFilter = searchFilter;
  }
   
- int Weather;
+ /*int Weather;
  int SpeedCategory;
  int LightCondition;
  int VehicleType;
  int AgeCategory;
  int AlcoholCategory;
  int CrashHour;
- int Sex;
+ int Sex;*/
+ 
+ HashMap<Integer,ArrayList<Integer>> searchFilter;
+ Integer selectedButton;
+ 
+ void setSelectedButton(Integer val)
+ {
+   this.selectedButton = val;
+ }
+ 
+ Integer getSelectedButton()
+ {
+   return this.selectedButton;
+ }
 }

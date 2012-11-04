@@ -12,6 +12,7 @@ class Bimaps{
  BiMap<Integer, String> hourOfDayList;
 
  BiMap<Integer, String> sexList;
+ BiMap<String, Integer> filtersList;
 
  //BiMap<String, Location> countylist;
 
@@ -161,6 +162,30 @@ class Bimaps{
    //hourOfDayList.put(.,"Unknown");
    
    return sexList;
+ }
+ 
+ public BiMap<String,Integer> getFiltersBimap(){
+   filtersList = HashBiMap.create();
+   
+   //Person
+   filtersList.put("Age",1);
+   filtersList.put("Alcohol",2);
+   filtersList.put("Sex",3);
+   
+   //Vehicle
+   filtersList.put("Vehicle Type",4);
+   filtersList.put("Speed",5);
+   
+   //Crash
+   filtersList.put("Day",6);
+   filtersList.put("Month",7);
+   filtersList.put("Hour of Day",8);
+   
+   //External
+   filtersList.put("Weather",9);
+   filtersList.put("Light Condition",10);
+   
+   return filtersList;
  }
  
 

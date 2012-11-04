@@ -132,6 +132,7 @@ class GUI
       {
         float w = (detailsX2 - detailsX1)*0.5;
         float h = (detailsY1+detailsY2)/4;
+        if(selectedPoint._countyName_!=null)
         text(selectedPoint._countyName_,detailsX1+w,detailsY1+h);
       }
       else

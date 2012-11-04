@@ -94,12 +94,6 @@ class QueryBuilder
     println("States - "+states);
     String totQ = "Select State,count(*) FROM Data_All WHERE State in ("+states+") GROUP BY State";
     println("tot Q:"+ totQ);
-//    db.query(totQ);
-//    HashMap<Integer,Integer> stateWiseCount = new HashMap<Integer,Integer>();
-//    while(db.next())
-//    {
-//      stateWiseCount.put(db.getInt("State"),db.getInt(1));
-//    }
     for(DataBean nb : dbNewList)
     {
       if(statePointList!=null)
@@ -110,8 +104,6 @@ class QueryBuilder
             nb.stateCount = bn.count;
         }
       }
-      //nb.stateCount = stateWiseCount.get(nb._State_);
-      println("nb.stateCount::"+nb.stateCount);
     }
     return dbNewList;
   }
@@ -121,8 +113,11 @@ class QueryBuilder
   {
     HashMap<String,Location> stList = getStateCoordList();
     getStateBiMap();
+    float[] cl = getCurrentMapCoordinates();
+    String cq = getCoordQuery(cl);
     //String query = "SELECT State,count(*) FROM Data_"+year+" group by State"; 
     String query = "SELECT State,count(*) FROM Data_All group by State";
+    println(query);
     db.query(query);
     ArrayList<DataBean> dbList = new ArrayList<DataBean>();
     while(db.next())
@@ -196,6 +191,8 @@ class QueryBuilder
   }
   
   String constructWhereClause(){
+    
+    /*if(searchCriteria!=null){
    
     StringBuilder filters = new StringBuilder();
     
@@ -228,6 +225,10 @@ class QueryBuilder
     filters.append(" 1 = 1 ");
     
     return filters.toString();
+    }*/
+    
+    return "";
+    
   }
   
   
@@ -434,9 +435,9 @@ class QueryBuilder
   
   String getCrashHourfilter(){
    
-    String condition;
+    String condition="";
     
-   switch(searchCriteria.CrashHour){
+   /*switch(searchCriteria.CrashHour){
     
     case 0:
       condition = " between 5 and 12) ";
@@ -451,7 +452,7 @@ class QueryBuilder
     default :
       condition = " between 5 and 12) "; 
          
-   }   
+   }   */
    return condition;
     
   }
