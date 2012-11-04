@@ -250,7 +250,7 @@ class QueryBuilder
     int months = bimaps.getFiltersBimap().get("Month");
     //println("null:"+searchCriteria.searchFilter.get(weather));
     
-    if(includeYearRange)
+    if(!includeYearRange)
       filters.append("AND Year IN (" + arrayListYear() + ") "); 
     
     if (!searchCriteria.searchFilter.get(weather).contains(bimaps.getWeatherBimap().inverse().get("All")))
