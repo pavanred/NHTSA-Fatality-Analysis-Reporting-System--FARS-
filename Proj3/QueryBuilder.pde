@@ -20,14 +20,15 @@ class QueryBuilder
   }
   
   //To query DB for individual points on the map.
-  ArrayList<DataBean> getPointsFromDB(int year)
+  ArrayList<DataBean> getPointsFromDB()
   {
     println("querying..");
     float[] clist = getCurrentMapCoordinates();
     String qc = getCoordQuery(clist);
     String whereClause = constructWhereClause();
      //qc="";
-    String query = "SELECT Distinct(CaseNumber),Latitude,Longitude,State,County,Year FROM Data_All WHERE "+ qc + whereClause;
+    //String query = "SELECT Distinct(CaseNumber),Latitude,Longitude,State,County,Year FROM Data_All WHERE "+ qc + whereClause;
+    String query = "SELECT Distinct(CaseNumber),Latitude,Longitude,State,County FROM Data_All WHERE "+ qc + whereClause;
     println(query);
     db.query(query);
     ArrayList<DataBean> dbList = new ArrayList<DataBean>();
@@ -39,21 +40,23 @@ class QueryBuilder
       b.set_Longitude_(db.getFloat("Longitude"));
       b.set_State_(db.getInt("State"));
       b.set_County_(db.getInt("County"));
+      //b.set_Year_(db.getInt("Year"));
       dbList.add(b);
     }
     println("returning results"+dbList.size());
+    println(query);
     stateLevelZoom = false;
     return dbList;
   }
   
   //To query DB to get points on the state level.
-  ArrayList<DataBean> getCountyPointsFromDB(int year)
+  ArrayList<DataBean> getCountyPointsFromDB()
   {
     println("Querying....");
 //    HashMap<Integer,HashMap<Integer,DataBean>> ctList = getCountyCoordList(); //List used to get all county info.
     float[] cl = getCurrentMapCoordinates();
     String cq = getCoordQuery(cl);
-    String query = "SELECT State,County,count(*) FROM Data_All WHERE "+cq+" group by County";
+    String query = "SELECT State,County,count(*) FROM Data_All WHERE "+ cq + " " + constructWhereClause() + " group by County";
     db.query(query);
     ArrayList<DataBean> dbList = new ArrayList<DataBean>();// List that is returned.
     HashSet<Integer> hsState = new HashSet<Integer>();
@@ -92,8 +95,14 @@ class QueryBuilder
     countyLevelZoom = true;
     String states = Joiner.on(", ").join(hs);
     println("States - "+states);
-    String totQ = "Select State,count(*) FROM Data_All WHERE State in ("+states+") GROUP BY State";
+    String totQ = "Select State,count(*) FROM Data_All WHERE State in ("+states+") " + constructWhereClause()  + " GROUP BY State";
     println("tot Q:"+ totQ);
+//    db.query(totQ);
+//    HashMap<Integer,Integer> stateWiseCount = new HashMap<Integer,Integer>();
+//    while(db.next())
+//    {
+//      stateWiseCount.put(db.getInt("State"),db.getInt(1));
+//    }
     for(DataBean nb : dbNewList)
     {
       if(statePointList!=null)
@@ -104,19 +113,21 @@ class QueryBuilder
             nb.stateCount = bn.count;
         }
       }
+      //nb.stateCount = stateWiseCount.get(nb._State_);
+      println("nb.stateCount::"+nb.stateCount);
     }
     return dbNewList;
   }
   
   //To query DB to get points on the state level.
-  ArrayList<DataBean> getStatePointsFromDB(int year)
+  ArrayList<DataBean> getStatePointsFromDB()
   {
     HashMap<String,Location> stList = getStateCoordList();
     getStateBiMap();
     float[] cl = getCurrentMapCoordinates();
     String cq = getCoordQuery(cl);
     //String query = "SELECT State,count(*) FROM Data_"+year+" group by State"; 
-    String query = "SELECT State,count(*) FROM Data_All group by State";
+    String query = "SELECT State,count(*) FROM Data_All " + constructWhereClause() + " group by State";
     println(query);
     db.query(query);
     ArrayList<DataBean> dbList = new ArrayList<DataBean>();
@@ -191,44 +202,74 @@ class QueryBuilder
   }
   
   String constructWhereClause(){
-    
-    /*if(searchCriteria!=null){
    
+    Bimaps bimaps = new Bimaps();
     StringBuilder filters = new StringBuilder();
     
-    filters.append(" AND ");
+    filters.append(" ");
     
-    if(searchCriteria.Weather != 99)
-      filters.append(" Weather = " + searchCriteria.Weather);
+    /*if(searchCriteria.Weather != 99)
+      filters.append("AND Weather = " + searchCriteria.Weather + " ");
      
     if(searchCriteria.SpeedCategory != -1)
-      filters.append(" Speed_Category = " + searchCriteria.SpeedCategory);
+      filters.append("AND Speed_Category = " + searchCriteria.SpeedCategory + " ");
      
     if(searchCriteria.LightCondition != 99)
-      filters.append(" LightCondition = " + searchCriteria.LightCondition);
+      filters.append("AND LightCondition = " + searchCriteria.LightCondition + " ");
      
     if(searchCriteria.VehicleType != -1)
-      filters.append(" VehicleType = " + searchCriteria.VehicleType); 
+      filters.append("AND VehicleType = " + searchCriteria.VehicleType + " "); 
     
     if(searchCriteria.AgeCategory != -1)
-      filters.append(" AgeCategory = " + searchCriteria.AgeCategory);
+      filters.append("AND AgeCategory = " + searchCriteria.AgeCategory + " ");
     
     if(searchCriteria.AgeCategory != -1)
-      filters.append(" Alcohol_Category = " + searchCriteria.AlcoholCategory);
+      filters.append("AND Alcohol_Category = " + searchCriteria.AlcoholCategory + " ");
     
     if(searchCriteria.CrashHour != -1)
-      filters.append(" (CrashHour " + getCrashHourfilter());
+      filters.append("AND (CrashHour " + getCrashHourfilter() + " ");
       
     if(searchCriteria.Sex != 0)
-      filters.append(" Sex " + searchCriteria.Sex);
+      filters.append("AND Sex =" + searchCriteria.Sex + " ");*/
+      
+    int weather = bimaps.getFiltersBimap().get("Weather");  
+    int speed = bimaps.getFiltersBimap().get("Speed");
+    int light = bimaps.getFiltersBimap().get("Light Condition");
+    int days = bimaps.getFiltersBimap().get("Day");  
+    int age = bimaps.getFiltersBimap().get("Age");
+    int alcohol = bimaps.getFiltersBimap().get("Alcohol");
+    int sex = bimaps.getFiltersBimap().get("Sex");  
+    int vehicle = bimaps.getFiltersBimap().get("Vehicle Type");
+    int hours = bimaps.getFiltersBimap().get("Hour of Day");
+    int months = bimaps.getFiltersBimap().get("Month");
     
-    filters.append(" 1 = 1 ");
-    
+    if (!searchCriteria.searchFilter.get(weather).contains(bimaps.getWeatherBimap().inverse().get("All")))
+      filters.append("AND Weather IN (" + arrayListToCSV(searchCriteria.searchFilter.get(weather)) + ") "); 
+ 
+    if (!searchCriteria.searchFilter.get(speed).contains(bimaps.getSpeedBimap().inverse().get("All")))
+      filters.append("AND Speed_Category IN (" + arrayListToCSV(searchCriteria.searchFilter.get(speed)) + ") "); 
+      
+    if (!searchCriteria.searchFilter.get(light).contains(bimaps.getLightBimap().inverse().get("All")))
+      filters.append("AND LightCondition IN (" + arrayListToCSV(searchCriteria.searchFilter.get(light)) + ") "); 
+      
+    if (!searchCriteria.searchFilter.get(vehicle).contains(bimaps.getVehicleBimap().inverse().get("All")))
+      filters.append("AND VehicleType IN (" + arrayListToCSV(searchCriteria.searchFilter.get(vehicle)) + ") "); 
+      
+    if (!searchCriteria.searchFilter.get(age).contains(bimaps.getAgeBimap().inverse().get("All")))
+      filters.append("AND AgeCategory IN (" + arrayListToCSV(searchCriteria.searchFilter.get(age)) + ") "); 
+ 
+    if (!searchCriteria.searchFilter.get(alcohol).contains(bimaps.getAlcoholBimap().inverse().get("All")))
+      filters.append("AND Alcohol_Category IN (" + arrayListToCSV(searchCriteria.searchFilter.get(alcohol)) + ") "); 
+      
+    if (!searchCriteria.searchFilter.get(sex).contains(bimaps.getSexBimap().inverse().get("All")))
+      filters.append("AND Sex IN (" + arrayListToCSV(searchCriteria.searchFilter.get(sex)) + ") ");
+  
+    if (!searchCriteria.searchFilter.get(months).contains(bimaps.getMonthBimap().inverse().get("All")))
+      filters.append("AND (((CrashDate/1000000)%100) IN (" + arrayListToCSV(searchCriteria.searchFilter.get(months)) + ")) ");  //should ocnsider making this a column, perhaps
+  
+    //to add hour and days - should be simple and efficient to do it by adding a column to the table    
+        
     return filters.toString();
-    }*/
-    
-    return "";
-    
   }
   
   
@@ -435,25 +476,262 @@ class QueryBuilder
   
   String getCrashHourfilter(){
    
-    String condition="";
+   String condition="";
     
    /*switch(searchCriteria.CrashHour){
     
     case 0:
       condition = " between 5 and 12) ";
+      break;
     case 1:
       condition = " between 13 and 17) ";
+      break;
     case 2:
       condition = " between 18 and 21) ";
+      break;
     case 3:
       condition = " between 22 and 24 OR CrashHour between 0 and 4) ";
+      break;
     case 4: 
       condition = " > 24) ";
+      break;
     default :
       condition = " between 5 and 12) "; 
+      break;
          
    }   */
    return condition;
     
   }
+  
+  /*--------------------------------------------------Chart queies-----------------------------------------*/
+      
+  public ArrayList<Float> getCrashesByYear(){
+    ArrayList<Float> crashCounts;
+
+    StringBuilder query = new StringBuilder();
+    query.append(" SELECT Count(CaseNumber) as CaseNumber from ( ");
+    query.append(" SELECT Distinct(CaseNumber) as CaseNumber,Year from Data_All Where ");
+    query.append(" " + getCoordQuery(getCurrentMapCoordinates()) + " ");
+    query.append(" " + constructWhereClause() + " )");
+    query.append(" GROUP BY Year ");             
+
+    println(query.toString());
+    db.connect();
+    
+    db.query(query.toString());
+    
+    crashCounts = new ArrayList<Float>();
+    while(db.next())
+    {
+      float count = db.getFloat("CaseNumber");
+          
+      crashCounts.add(count);      
+    }
+    db.close();    
+    
+    crashes = crashCounts;
+    
+    return crashes;
+  }
+  
+  public ArrayList<KeyValue> getCrashesByGroup(){
+    
+    ArrayList<KeyValue> crashCounts = new ArrayList<KeyValue>();
+    KeyValue kv;   
+    int id;
+
+    StringBuilder query = new StringBuilder();
+    query.append(" SELECT Count(CaseNumber) as CaseNumber, " + getGroupByName() + " as Id from ( ");
+    query.append(" SELECT Distinct(CaseNumber) as CaseNumber, " + getGroupByName() + " from Data_All Where ");
+    query.append(" " + getCoordQuery(getCurrentMapCoordinates()) + " ");
+    query.append(" " + constructChartWhereClause());        
+
+    //println(query.toString());
+    db.connect();
+    
+    db.query(query.toString());
+
+    while(db.next()){         
+      id = db.getInt("Id");
+      crashCounts.add(new KeyValue(id, db.getFloat("CaseNumber"),getLabelName(id)));      
+    }
+    db.close();    
+    println(crashCounts.size());
+    return crashCounts;
+  }
+  
+  String constructChartWhereClause(){   //overload for barcharts.. to eliminate the charttype from the filter
+   
+    StringBuilder filters = new StringBuilder();
+    //println("adding where clause");
+    filters.append(" ");
+    
+    /*if(searchCriteria.Weather != 99 && selectedChart != selectedChartType)
+      filters.append("AND Weather = " + searchCriteria.Weather + " ");
+     
+    if(searchCriteria.SpeedCategory != -1  && selectedChart != selectedChartType)
+      filters.append("AND Speed_Category = " + searchCriteria.SpeedCategory + " ");
+     
+    if(searchCriteria.LightCondition != 99 && selectedChart != selectedChartType)
+      filters.append("AND LightCondition = " + searchCriteria.LightCondition + " ");
+     
+    if(searchCriteria.VehicleType != -1 && selectedChart != selectedChartType)
+      filters.append("AND VehicleType = " + searchCriteria.VehicleType + " "); 
+    
+    if(searchCriteria.AgeCategory != -1 && selectedChart != selectedChartType)
+      filters.append("AND AgeCategory = " + searchCriteria.AgeCategory + " ");
+    
+    if(searchCriteria.AgeCategory != -1 && selectedChart != selectedChartType)
+      filters.append("AND Alcohol_Category = " + searchCriteria.AlcoholCategory + " ");
+      
+    if(searchCriteria.Sex != 0 && selectedChart != selectedChartType)
+      filters.append("AND Sex =" + searchCriteria.Sex + " ");
+      
+    filters.append(" ) ");
+    println("after adding where clause");
+    switch (selectedChartType){
+      
+      case 1:
+        filters.append(" Group by Weather");
+        break;
+      case 2:
+        filters.append(" Group by Speed_Category");
+        break;
+      case 3:
+        filters.append(" Group by LightCondition");
+        break;
+      case 4:
+        filters.append(" Group by VehicleType");
+        break;
+      case 5:
+        filters.append(" Group by AgeCategory");
+        break;
+      case 6:
+        filters.append(" Group by Alcohol_Category");
+        break;
+      case 7:
+        filters.append(" Group by Sex");
+        break;
+      default:
+        filters.append(" Group by State");
+        break;
+    }*/
+    
+     Bimaps bimaps = new Bimaps(); 
+    int weather = bimaps.getFiltersBimap().get("Weather");  
+    int speed = bimaps.getFiltersBimap().get("Speed");
+    int light = bimaps.getFiltersBimap().get("Light Condition");
+    int days = bimaps.getFiltersBimap().get("Day");  
+    int age = bimaps.getFiltersBimap().get("Age");
+    int alcohol = bimaps.getFiltersBimap().get("Alcohol");
+    int sex = bimaps.getFiltersBimap().get("Sex");  
+    int vehicle = bimaps.getFiltersBimap().get("Vehicle Type");
+    int hours = bimaps.getFiltersBimap().get("Hour of Day");
+    int months = bimaps.getFiltersBimap().get("Month");
+    
+    if (!(searchCriteria.searchFilter.get(weather).contains(bimaps.getWeatherBimap().inverse().get("All")) || searchCriteria.getSelectedButton() ==  weather))
+      filters.append("AND Weather IN (" + arrayListToCSV(searchCriteria.searchFilter.get(weather)) + ") "); 
+ 
+    if (!(searchCriteria.searchFilter.get(speed).contains(bimaps.getSpeedBimap().inverse().get("All")) || searchCriteria.getSelectedButton() ==  speed))
+      filters.append("AND Speed_Category IN (" + arrayListToCSV(searchCriteria.searchFilter.get(speed)) + ") "); 
+      
+    if (!(searchCriteria.searchFilter.get(light).contains(bimaps.getLightBimap().inverse().get("All")) || searchCriteria.getSelectedButton() ==  light))
+      filters.append("AND LightCondition IN (" + arrayListToCSV(searchCriteria.searchFilter.get(light)) + ") "); 
+      
+    if (!(searchCriteria.searchFilter.get(vehicle).contains(bimaps.getVehicleBimap().inverse().get("All")) || searchCriteria.getSelectedButton() ==  vehicle))
+      filters.append("AND VehicleType IN (" + arrayListToCSV(searchCriteria.searchFilter.get(vehicle)) + ") "); 
+      
+    if (!(searchCriteria.searchFilter.get(age).contains(bimaps.getAgeBimap().inverse().get("All")) || searchCriteria.getSelectedButton() ==  age))
+      filters.append("AND AgeCategory IN (" + arrayListToCSV(searchCriteria.searchFilter.get(age)) + ") "); 
+ 
+    if (!(searchCriteria.searchFilter.get(alcohol).contains(bimaps.getAlcoholBimap().inverse().get("All")) || searchCriteria.getSelectedButton() ==  alcohol))
+      filters.append("AND Alcohol_Category IN (" + arrayListToCSV(searchCriteria.searchFilter.get(alcohol)) + ") "); 
+      
+    if (!(searchCriteria.searchFilter.get(sex).contains(bimaps.getSexBimap().inverse().get("All")) || searchCriteria.getSelectedButton() ==  sex))
+      filters.append("AND Sex IN (" + arrayListToCSV(searchCriteria.searchFilter.get(sex)) + ") ");
+  
+    if (!(searchCriteria.searchFilter.get(months).contains(bimaps.getMonthBimap().inverse().get("All")) || searchCriteria.getSelectedButton() ==  months))
+      filters.append("AND (((CrashDate/1000000)%100) IN (" + arrayListToCSV(searchCriteria.searchFilter.get(months)) + ")) ");  //should ocnsider making this a column, perhaps
+  
+    //to add hour and days - should be simple and efficient to do it by adding a column to the table    
+        
+    filters.append(") Group by Id"); //+ getGroupByName());    
+    
+    return filters.toString();
+  }
+  
+  String getGroupByName(){
+   
+    StringBuilder filters = new StringBuilder();
+    
+   switch (searchCriteria.getSelectedButton()){
+     
+      case 9:
+        filters.append(" Weather ");
+        break;
+      case 5:
+        filters.append(" Speed_Category ");
+        break;
+      case 10:
+        filters.append(" LightCondition ");
+        break;
+      case 4:
+        filters.append(" VehicleType ");
+        break;
+      case 1:
+        filters.append(" AgeCategory ");
+        break;
+      case 2:
+        filters.append(" Alcohol_Category ");
+        break;
+      case 3:
+        filters.append(" Sex ");
+        break;
+      default:
+        filters.append(" Weather ");
+        break;
+    }
+    
+    return filters.toString();
+    
+  }
+  
+  String getLabelName(int id){
+   
+    String label;
+    
+    Bimaps bimaps = new Bimaps();
+    
+     switch (searchCriteria.getSelectedButton()){
+      case 9:
+        label = bimaps.getWeatherBimap().get(id);
+        break;
+      case 5:
+        label = bimaps.getSpeedBimap().get(id);
+        break;
+      case 10:
+        label = bimaps.getLightBimap().get(id);
+        break;
+      case 4:
+        label = bimaps.getVehicleBimap().get(id);
+        break;
+      case 1:
+        label = bimaps.getAgeBimap().get(id);
+        break;
+      case 2:
+        label = bimaps.getAlcoholBimap().get(id);
+        break;
+      case 3:
+        label = bimaps.getSexBimap().get(id);
+        break;
+      default:
+        label = bimaps.getMonthBimap().get(id);
+        break;
+     }
+    
+    return label;
+    
+  }
+
 }

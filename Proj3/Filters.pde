@@ -5,8 +5,9 @@ class Filters{
    this.searchFilter = new HashMap<Integer,ArrayList<Integer>>();
  }  //
  
- Filters(HashMap<Integer,ArrayList<Integer>> searchFilter){   //setting default search criteria
-   this.searchFilter = searchFilter;
+ Filters(HashMap<Integer,ArrayList<Integer>> searchFilter, int selected){   //setting default search criteria
+   this.searchFilter = searchFilter;   
+   setSelectedButton(selected);
  }
   
  /*int Weather;
@@ -24,6 +25,8 @@ class Filters{
  void setSelectedButton(Integer val)
  {
    this.selectedButton = val;
+   //QueryBuilder qb = new QueryBuilder();
+   //barChartData = qb.getCrashesByGroup(val);
  }
  
  Integer getSelectedButton()

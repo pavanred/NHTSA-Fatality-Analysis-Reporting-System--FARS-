@@ -1,6 +1,7 @@
 
 public class DataBean  {
   
+  private int _Year_;
   
   private int _Age_;
 
@@ -122,6 +123,14 @@ public class DataBean  {
     this.buttonState = false;
   }
 
+  public int get_Year_() {
+   return this._Year_; 
+  }
+  
+  public void set_Year_(int _Year_) {
+    this._Year_ = _Year_;
+  }
+  
   public int get_Age_() {
     return this._Age_;
   }

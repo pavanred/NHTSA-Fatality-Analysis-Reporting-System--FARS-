@@ -70,6 +70,8 @@ class Chart{
     labely = _labely;
     labelx = _labelx;
     title = _title; 
+   
+   try{
             
     stroke(255);
     strokeWeight(2 * scaleFactor);
@@ -187,29 +189,51 @@ class Chart{
     textAlign(RIGHT);    
     text(labelx,X + plotWidth, Y + plotHeight + percentY(10));
     noFill();
+    
+   }
+   catch(Exception e){
+    
+     noStroke();
+     noFill();
+     
+    println("error drawing line graph" + e.toString());
+     
+   }
   } 
   
   
   public Float getMaxValue(Float[] numbers){  
-  Float maxValue = numbers[0];  
   
-  for(int i=1;i < numbers.length;i++){  
-    if(numbers[i] > maxValue){  
-      maxValue = numbers[i];  
-    }  
+  Float maxValue = 0.0;  
+    
+  if(numbers.length > 0){
+    
+    maxValue = numbers[0];  
+    
+    for(int i=1;i < numbers.length;i++){  
+      if(numbers[i] > maxValue){  
+        maxValue = numbers[i];  
+      }  
+    }
   }  
     
   return maxValue;  
 }  
   
 public Float getMinValue(Float[] numbers){  
-  Float minValue = numbers[0];  
   
-  for(int i=1;i<numbers.length;i++){  
-    if(numbers[i] < minValue){  
-      minValue = numbers[i];  
+  Float minValue = 0.0;
+  
+  if(numbers.length > 0){
+  
+    minValue = numbers[0];  
+    
+    for(int i=1;i<numbers.length;i++){  
+      if(numbers[i] < minValue){  
+        minValue = numbers[i];  
+      }  
     }  
-  }  
+  }
   
   return minValue;  
 }  

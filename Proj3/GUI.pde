@@ -9,7 +9,7 @@ class GUI
   float mapX1,mapY1,mapX2,mapY2;
   float detailsX1,detailsY1,detailsX2,detailsY2;
   float tabW,tabH;
-  ChartArea chartArea;
+  
   ListBox lb;
   GUI(float x1, float y1, float x2, float y2)
   {
@@ -60,14 +60,13 @@ class GUI
     
     rect(0,0,width/2,height); // to hide extra map drawn. TODO - find a better way.
     
-    rect(graphX1,graphY1,graphX2,graphY2);
-    
-     //rect(graphX1,graphY1,graphX2,graphY2);
-    //chartArea.draw();    
+    //rect(graphX1,graphY1,graphX2,graphY2);
+    chartArea.draw(); 
+     //rect(graphX1,graphY1,graphX2,graphY2);       
 
-    rect(controlsX1,controlsY1,controlsX2,controlsY2);
-    tabs.draw();
-    
+    //rect(controlsX1,controlsY1,controlsX2,controlsY2);
+    tabs.draw();    
+    barChartArea.draw();
     
     fill(0,200);
     rect(detailsX1,detailsY1,detailsX2,detailsY2);
@@ -97,7 +96,8 @@ class GUI
     buttons.add(b);
     
     chartArea = new ChartArea(graphX1,graphY1,graphX2,graphY2); //init for chartarea.
-    
+    barChartArea = new BarChartArea(controlsX1 + percentX(6),controlsY1 + percentY(14),controlsX2 + percentX(17),controlsY2);
+//    lb.addItem("Hello2");); //init for barchartarea.
 //    lb = new ListBox(tileX1+tileWidth,tileY1+tileHeight,tileX1+tileWidth*2,tileY1+tileHeight*2,scaleFactor);
 //    lb.addItem("Hello1");
 //    lb.addItem("Hello2");

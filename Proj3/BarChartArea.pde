@@ -17,19 +17,21 @@ class BarChartArea{
   
   void draw(){
     
-    BarChart c = new BarChart(X1,Y1,(X2-X1)/2,Y2-Y1,percentX(5),percentX(5),percentY(3),percentY(12));  
+    int selectedChart = 0; //default state
     
-    QueryBuilder qb = new QueryBuilder();
+    BarChart c = new BarChart(X1,Y1,(X2-X1)/2,Y2-Y1,percentX(5),percentX(5),percentY(2),percentY(6));  
+        
+    //QueryBuilder qb = new QueryBuilder();
     
-    ArrayList<KeyValue> data = new ArrayList<KeyValue>();
-    data.add(new KeyValue(0,300));
-    data.add(new KeyValue(1,200));
-    data.add(new KeyValue(3,800));
-    data.add(new KeyValue(4,600));
-    data.add(new KeyValue(5,500));
+    /*ArrayList<KeyValue> data = new ArrayList<KeyValue>();
+    data.add(new KeyValue(0,300,"test"));
+    data.add(new KeyValue(1,200,"ad"));
+    data.add(new KeyValue(3,800,"adsf sd"));
+    data.add(new KeyValue(4,600,"dsfsda"));
+    data.add(new KeyValue(5,500,"dsf"));*/
     
-    c.getData(data);
-    c.drawChart(#EBD566,10,5,"Years","Crashes","",percentY(6));   
+    c.getData(barChartData);
+    c.drawChart(#EBD566,10,4,"Years","Crashes","",percentY(6));   
     
   }
 }

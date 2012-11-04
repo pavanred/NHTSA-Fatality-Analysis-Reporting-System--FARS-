@@ -18,10 +18,16 @@ private static Map<String, Integer> weatherHashMap;
 private static Map<Integer, String> stateHashMap;
 Bimaps bimap;
 
+ChartArea chartArea;
+ArrayList<Float> chartData = new ArrayList<Float>();
+BarChartArea barChartArea;
+ArrayList<KeyValue> barChartData = new ArrayList<KeyValue>();
+
 ArrayList<TileButton> buttons;
 Button qButton;
 ArrayList<DataBean> pointList,statePointList;
 Filters searchCriteria;
+int selectedChartType = 1;
 
 QueryBuilder execQuery;
 
@@ -106,6 +112,10 @@ void setupGUIElements()
   // init map
   bimap = new Bimaps();
   
+  //filters 
+  //searchCriteria = new Filters(99, 1, 99, -1, -1, 1, 1, 1);
+  searchCriteria = new Filters(getDefaultFilter(),bimap.getFiltersBimap().get("Weather"));
+  
   //sets width and height for the entire drawing canvas.
   float windowX1 = width*0.01;
   float windowX2 = width*0.99;
@@ -115,6 +125,7 @@ void setupGUIElements()
   
   mapSize = new PVector( width/2, height );
   mapOffset = new PVector(width/2, 0 );  
+  println(gui.mapY2-gui.mapY1);
   map = new InteractiveMap(this, new Microsoft.AerialProvider(),mapOffset.x, mapOffset.y, mapSize.x, mapSize.y ); // does not work when put inside MapArea constructor
   mapArea = new MapArea(mapSize,mapOffset);
   
@@ -129,7 +140,7 @@ void setupGUIElements()
   tabs = new ControlsTab(gui.controlsX1,gui.controlsY1,gui.controlsX2,gui.tabH);
   lastZoom = 5;
   
-  searchCriteria = new Filters();
+  //searchCriteria.setSelectedButton(bimap.getFiltersBimap().get("Weather"));
 }
 
 void draw()
@@ -319,7 +330,7 @@ void applyChanges()
     if(map.getZoom()>=11  && map.getZoom()!= lastZoom) //get point level data only if the map is zoomed > 5
     {
       println("ZOOOM IN:"+map.getZoom());
-      pointList = execQuery.getPointsFromDB(2001);
+      pointList = execQuery.getPointsFromDB();
       lastZoom = map.getZoom();
       
     }
@@ -327,7 +338,7 @@ void applyChanges()
     else if(map.getZoom()>=7 && map.getZoom()<11 && map.getZoom()!= lastZoom)
     {
       println("County zoom IN:"+map.getZoom());
-      pointList = execQuery.getCountyPointsFromDB(2001);
+      pointList = execQuery.getCountyPointsFromDB();
       lastZoom = map.getZoom();
     }
     //else if(map.getZoom()<=6 && (stateLevelZoom==null || !stateLevelZoom))
@@ -339,7 +350,7 @@ void applyChanges()
       lastZoom = map.getZoom();
       if(statePointList==null)
       {
-        pointList = execQuery.getStatePointsFromDB(2001);
+        pointList = execQuery.getStatePointsFromDB();
         statePointList = pointList;
       }
       else
@@ -348,4 +359,7 @@ void applyChanges()
         pointList = statePointList;
       }
     }
+
+    chartData = execQuery.getCrashesByYear();    
+    barChartData = execQuery.getCrashesByGroup();
 }
