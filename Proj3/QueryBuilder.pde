@@ -581,7 +581,7 @@ class QueryBuilder
     query.append(" GROUP BY Year ");             
 
     println(query.toString());
-    db.connect();
+    //db.connect();
     
     db.query(query.toString());
     
@@ -592,7 +592,7 @@ class QueryBuilder
           
       crashCounts.add(count);      
     }
-    db.close();    
+    //db.close();    
     
     crashes = crashCounts;
     
@@ -612,7 +612,7 @@ class QueryBuilder
     query.append(" " + constructChartWhereClause());        
 
     //println(query.toString());
-    db.connect();
+    //db.connect();
     
     db.query(query.toString());
 
@@ -620,7 +620,7 @@ class QueryBuilder
       id = db.getInt("Id");
       crashCounts.add(new KeyValue(id, db.getFloat("CaseNumber"),getLabelName(id)));      
     }
-    db.close();    
+    //db.close();    
     println(crashCounts.size());
     return crashCounts;
   }

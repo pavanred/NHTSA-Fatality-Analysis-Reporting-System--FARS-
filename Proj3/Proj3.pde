@@ -23,7 +23,7 @@ ArrayList<Float> chartData = new ArrayList<Float>();
 BarChartArea barChartArea;
 ArrayList<KeyValue> barChartData = new ArrayList<KeyValue>();
 
-ArrayList<TileButton> buttons;
+ArrayList<BangButton> buttons;
 Button qButton;
 ArrayList<DataBean> pointList,statePointList;
 Filters searchCriteria;
@@ -136,7 +136,7 @@ void setupGUIElements()
   }); 
   execQuery = new QueryBuilder();
   execQuery.checking();
-  applyChanges();
+  applyChartFilters();
   tabs = new ControlsTab(gui.controlsX1,gui.controlsY1,gui.controlsX2,gui.tabH);
   lastZoom = 5;
   
@@ -301,15 +301,12 @@ boolean isWithinMap(float x, float y) // checks if the touch is within map area 
 // checks if any of the buttons are pressed. If pressed does the appropriate operation.
 void checkButtons(float xPos, float yPos) 
 {
-  for(TileButton b : buttons)
+  for(BangButton b : buttons)
   {
-    if(b.touch(xPos,yPos)==1)
+    if(b.touch(xPos,yPos))
     {
-      if(b.isSelected)
-        {
-          if(b.label.equals("Apply"))
-            applyChanges();
-        }
+      if(b.label.equals("Apply"))
+        applyChartFilters();
     }
   }
   if(pointList!=null)
@@ -347,6 +344,45 @@ void applyChanges()
     }
     //else if(map.getZoom()<=6 && (stateLevelZoom==null || !stateLevelZoom))
     else if(map.getZoom()<=6 && map.getZoom()!= lastZoom)
+    {
+      println("ZOOOM:"+map.getZoom());
+      //pointList = execQuery.getStatePointsFromDB(2001);
+        //statePointList = pointList;
+      lastZoom = map.getZoom();
+      if(statePointList==null)
+      {
+        pointList = execQuery.getStatePointsFromDB();
+        statePointList = pointList;
+      }
+      else
+      {
+        println("size:"+statePointList.size());
+        pointList = statePointList;
+      }
+    }
+
+    //chartData = execQuery.getCrashesByYear();    
+    //barChartData = execQuery.getCrashesByGroup();
+}
+
+void applyChartFilters()
+{
+  if(map.getZoom()>=11  ) //get point level data only if the map is zoomed > 5
+    {
+      println("ZOOOM IN:"+map.getZoom());
+      pointList = execQuery.getPointsFromDB();
+      lastZoom = map.getZoom();
+      
+    }
+    //else if(map.getZoom()>=7 && map.getZoom()<12 && (countyLevelZoom==null || !countyLevelZoom))
+    else if(map.getZoom()>=7 && map.getZoom()<11 )
+    {
+      println("County zoom IN:"+map.getZoom());
+      pointList = execQuery.getCountyPointsFromDB();
+      lastZoom = map.getZoom();
+    }
+    //else if(map.getZoom()<=6 && (stateLevelZoom==null || !stateLevelZoom))
+    else if(map.getZoom()<=6 )
     {
       println("ZOOOM:"+map.getZoom());
       //pointList = execQuery.getStatePointsFromDB(2001);

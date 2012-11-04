@@ -98,8 +98,8 @@ class GUI
     
     float tileWidth = (tileX2-tileX1)/5;
     float tileHeight = (tileY2-tileY1)/3;
-    buttons = new ArrayList<TileButton>();
-    TileButton b = new TileButton(tileX2-(tileWidth*0.30),tileY2-tileHeight,tileX2,tileY2,"Apply");
+    buttons = new ArrayList<BangButton>();
+    BangButton b = new BangButton(tileX2-(tileWidth*0.30),tileY2-tileHeight,tileX2,tileY2,"Apply");
     buttons.add(b);
     
     chartArea = new ChartArea(graphX1,graphY1,graphX2,graphY2); //init for chartarea.
@@ -115,13 +115,12 @@ class GUI
   
   void drawControls()
   {
-    for(TileButton b : buttons)
+    for(BangButton b : buttons)
     {
       b.draw();
     }
     
     slider.drawSlider();
-    //lb.draw();
     drawPointDetails();
   }
   

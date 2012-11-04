@@ -125,4 +125,49 @@ public class TileButton
     }
     return 0;
   }
-}  
+}
+
+class BangButton
+{
+  private float xPos1;
+  private float xPos2;
+  private float yPos1;
+  private float yPos2;
+  private float width;
+  private float height;
+  private String label;
+  color basecolor,labelColor_selected;
+  
+  BangButton(float x, float y, float x2, float y2, String label)
+  {
+    this.xPos1 = x;
+    this.yPos1 = y;
+    this.xPos2 = x2;
+    this.yPos2 = y2;
+    this.label = label;
+    this.basecolor = color(#4B443C);
+    this.labelColor_selected = color(#F0B30D);
+  }
+  
+  public void draw()
+  {
+    pushStyle();
+    rectMode(CORNERS);
+    fill(basecolor);
+    rect(xPos1,yPos1,xPos2,yPos2,5);
+    textAlign(CENTER,CENTER);
+    fill(labelColor_selected);
+    text(label,xPos1,yPos1,xPos2,yPos2);
+    popStyle();
+  }
+  
+  public boolean touch(float x, float y)
+  {
+    if ( (x >= xPos1 && x <=xPos2 ) && (y >= yPos1 && y <= yPos2) )
+    {
+      return true;
+    }
+    else return false;
+  }
+  
+}
