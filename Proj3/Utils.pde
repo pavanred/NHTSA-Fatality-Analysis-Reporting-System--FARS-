@@ -21,6 +21,17 @@ String arrayListToCSV(ArrayList<Integer> arr){
  return values.substring(0, values.length() - 1); 
 }
 
+String arrayListYear(){
+ 
+ String values = " ";
+ 
+ for(Integer i = searchCriteria.currentMinYear; i <= searchCriteria.currentMaxYear; i++){      
+      values = values + i.toString() + ",";
+ }
+     
+ return values.substring(0, values.length() - 1); 
+}
+
 HashMap<Integer,ArrayList<Integer>> getDefaultFilter(){
   
   Bimaps bimaps = new Bimaps();
