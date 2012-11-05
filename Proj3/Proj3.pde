@@ -115,7 +115,7 @@ void setupGUIElements()
   
   //filters 
   //searchCriteria = new Filters(99, 1, 99, -1, -1, 1, 1, 1);
-  searchCriteria = new Filters(getDefaultFilter(),bimap.getFiltersBimap().get("Weather"));
+  searchCriteria = new Filters(getDefaultFilter(),bimap.getFiltersBimap().get("Age"));
   
   //sets width and height for the entire drawing canvas.
   float windowX1 = width*0.01;

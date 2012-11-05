@@ -19,7 +19,7 @@ class BarChartArea{
     
     int selectedChart = 0; //default state
     
-    BarChart c = new BarChart(X1,Y1,(X2-X1)/2,Y2-Y1,percentX(5),percentX(5),percentY(2),percentY(6));  
+    BarChart c = new BarChart(X1,Y1,(X2-X1)/2,Y2-Y1,percentX(6),percentX(5),percentY(2),percentY(6));  
         
     //QueryBuilder qb = new QueryBuilder();
     
@@ -31,7 +31,7 @@ class BarChartArea{
     data.add(new KeyValue(5,500,"dsf"));*/
     
     c.getData(barChartData);
-    c.drawChart(#EBD566,10,4,"Years","Crashes","",percentY(6));   
+    c.drawChart(#EBD566,10,4,"","Crashes","",percentY(6));   
     
   }
 }
