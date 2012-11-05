@@ -101,11 +101,12 @@ class GUI
     float tileHeight = (tileY2-tileY1)/3;
     buttons = new ArrayList<BangButton>();
     Tbuttons = new ArrayList<TileButton>();
-    BangButton b = new BangButton(tileX2-(tileWidth*0.30),tileY2-tileHeight,tileX2,tileY2,"Apply");
-    //TileButton helpButton = new TileButton(tileX2-(tileWidth*0.30),tileY2+(tileY2-tileY1),tileX2,tileY2+(2*(tileY2-tileY1)),"Help");
-    TileButton helpButton2 = new TileButton(tileX2-(tileWidth*0.30),tileY2,tileX2,tileY2+tileHeight,"Help");
+    BangButton b = new BangButton(tileX2-(tileWidth*0.60),tileY2-tileHeight,tileX2-(tileWidth*0.30),tileY2,"Apply");
+    TileButton helpButton = new TileButton(tileX2-(tileWidth*0.60),tileY2,tileX2-(tileWidth*0.30),tileY2+tileHeight,"Help");
+    TileButton events = new TileButton(tileX2-(tileWidth*0.30),tileY2-tileHeight,tileX2,tileY2,"Events");
     buttons.add(b);
-    Tbuttons.add(helpButton2);
+    Tbuttons.add(helpButton);
+    Tbuttons.add(events);
     
     chartArea = new ChartArea(graphX1,graphY1,graphX2,graphY2 - percentY(13)); //init for chartarea.
 

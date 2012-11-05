@@ -25,6 +25,8 @@ ArrayList<KeyValue> barChartData = new ArrayList<KeyValue>();
 
 ArrayList<BangButton> buttons;
 ArrayList<TileButton> Tbuttons;
+ArrayList<Events> eventList;
+
 Button qButton;
 ArrayList<DataBean> pointList,statePointList;
 Filters searchCriteria;
@@ -123,6 +125,16 @@ void setupGUIElements()
   float windowX2 = width*0.99;
   float windowY1 = height*0.05;
   float windowY2 = height*0.95;
+  eventList = new ArrayList<Events>();
+  Events e = new Events(2001,"Event 1");
+  eventList.add(e);
+  e = new Events(2004,"Event 2");
+  eventList.add(e);
+  e = new Events(2008,"Event 3");
+  eventList.add(e);
+  e = new Events(2010,"Event 4");
+  eventList.add(e);
+  
   gui = new GUI(windowX1,windowY1,windowX2,windowY2);
   
   mapSize = new PVector( width/2, height );

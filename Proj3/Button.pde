@@ -102,6 +102,10 @@ public class TileButton
         {
           drawHelpBox();
         }
+        if(label.equals("Events")) //draw help window.
+        {
+          drawEventBox();
+        }
     }
     else
     {
@@ -140,6 +144,52 @@ public class TileButton
     text("Help and Credits",gui.graphX1,gui.graphY1,gui.graphX2,gui.graphY2);
     
     popStyle();
+  }
+  
+  public void drawEventBox()
+  {
+    println("drawing events:");
+    //X + (index * plotWidth/(xmaxValue-xminValue))
+    float ex1 = chartArea.c.X;//gui.sliderX1;
+    float ey1 = chartArea.c.Y;//gui.sliderY1-percentY(4);
+    float ex2 = chartArea.c.X+chartArea.c.plotWidth -percentX(4);//gui.sliderX2;
+    float ey2 = chartArea.c.Y+chartArea.c.plotHeight;;//chartArea.c.Y+chartArea.c.plotHeight;//gui.sliderY2-percentY(4);
+    
+    for(Events event : eventList)
+    {
+      float x = map(event.year,searchCriteria.currentMinYear,searchCriteria.currentMaxYear,ex1,ex2);
+      if(isBoundedByPlot(x,ey2))
+      {
+        println("Event:"+event);
+        pushStyle();
+        fill(#ffffff);
+        strokeWeight(5);
+        stroke(#ffffff);
+        float ew = (ex2-ex1)/5;
+        float eh = (ey2-ey1)/5;
+        rect(x,ey2,x+ew,ey2+eh);
+        stroke(#ffffff);
+        line(x,ey1,x,ey2);
+        textAlign(CENTER,CENTER);
+        fill(0);
+        //textSize(10);
+        text(event.txt,x,ey2,x+ew,ey2+eh);
+        popStyle();
+      }
+    }
+  }
+  
+  boolean isBoundedByPlot(float x, float y){
+    float ex1 = chartArea.c.X;//gui.sliderX1;
+    float ey1 = chartArea.c.Y;//gui.sliderY1-percentY(4);
+    float ex2 = chartArea.c.X+chartArea.c.plotWidth -percentX(4);//gui.sliderX2;
+    float ey2 = chartArea.c.Y+chartArea.c.plotHeight;//gui.sliderY2-percentY(4);
+    println(ex1+","+ey1+","+ex2+","+ey2);
+    println(x+","+y);
+    if((x>=ex1) && (x <= ex2) && (y <= ey2) && (y>= ey1))
+      return true;
+    else
+      return false;
   }
 }
 
@@ -185,7 +235,16 @@ class BangButton
     }
     else return false;
   }
+}
+
+class Events
+{
+  String txt;
+  int year;
   
-  
-  
+  Events(int year,String txt)
+  {
+    this.year = year;
+    this.txt = txt;
+  }
 }

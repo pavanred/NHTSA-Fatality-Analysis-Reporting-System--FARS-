@@ -122,8 +122,9 @@ class MapArea
           b.x = p.x;
           b.y = p.y;
           b.countyLevel = true;
+          DecimalFormat formatter = new DecimalFormat("##,##,###");
           textAlign(CENTER,CENTER);
-          text(b._countyName_+"\n"+b.count,p.x,p.y);
+          text(b._countyName_+"\n"+formatter.format(b.count),p.x,p.y);
         }
       }
       else if(map.getZoom()<7) //Data points will be list of states
@@ -257,10 +258,10 @@ class MapArea
         b.x = p2.x;
         b.y = p2.y;
         b.stateLevel = true;
-        
+        DecimalFormat formatter = new DecimalFormat("##,##,###");
         textSize(ellipseSize*0.2);
         textAlign(CENTER,CENTER);
-        text(bm.get(b._State_)+"\n"+b.count,p2.x,p2.y);
+        text(bm.get(b._State_)+"\n"+formatter.format(b.count),p2.x,p2.y);
         
       }
       else // do the normal thing
@@ -279,10 +280,10 @@ class MapArea
       b.y = p.y;
       b.stateLevel = true;
         
-        
+      DecimalFormat formatter = new DecimalFormat("##,##,###");
       textSize(ellipseSize*0.2);
       textAlign(CENTER,CENTER);
-      text(bm.get(b._State_)+"\n"+b.count,p.x,p.y);
+      text(bm.get(b._State_)+"\n"+formatter.format(b.count),p.x,p.y);
       }
       
       if(top10 && count==10)

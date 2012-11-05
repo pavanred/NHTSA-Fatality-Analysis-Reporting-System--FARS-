@@ -184,6 +184,7 @@ class Chart{
           }      
           
         }
+        
      }
      
     stroke(255);
