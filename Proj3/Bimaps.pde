@@ -37,7 +37,7 @@ class Bimaps{
    
    speedList.put(-1,"All");
    speedList.put(0,"Static");
-   speedList.put(1,"0 - 50");
+   speedList.put(1,"1 - 50");
    speedList.put(2,"51 - 100");
    speedList.put(3,"Above 100");
    speedList.put(4,"Unknown");
