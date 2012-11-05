@@ -106,7 +106,8 @@ void setup()
 //Method can be used to prepare all GUI Elements to be drawn
 void setupGUIElements()
 {
-  plotFont = createFont("DroidSans-Bold.ttf",12*scaleFactor);
+  //plotFont = createFont("DroidSans-Bold.ttf",12*scaleFactor);
+  plotFont = createFont("Serif",12*scaleFactor);
   textFont(plotFont);
   
   // init map

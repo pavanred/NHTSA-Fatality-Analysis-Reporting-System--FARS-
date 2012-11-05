@@ -102,13 +102,14 @@ class GUI
     BangButton b = new BangButton(tileX2-(tileWidth*0.30),tileY2-tileHeight,tileX2,tileY2,"Apply");
     buttons.add(b);
     
-    chartArea = new ChartArea(graphX1,graphY1,graphX2,graphY2); //init for chartarea.
+    chartArea = new ChartArea(graphX1,graphY1,graphX2,graphY2 - percentY(12)); //init for chartarea.
 
     
     //searchCriteria = new Filters();
     
     //slider = new YearSlider(width-(width*0.75),height-200,width-(width*0.25),height-150,2000,2011);
-    slider = new YearSlider(sliderX1,sliderY1,sliderX2,sliderY2,2000,2011);
+    slider = new YearSlider(sliderX1,sliderY1-percentY(4),sliderX2,sliderY2-percentY(4),2000,2011);
+    //slider = new YearSlider(graphX1,graphY1+percentY(4),graphX2,graphY2+percentY(4),2000,2011);
     barChartArea = new BarChartArea(controlsX1 + percentX(6),controlsY1 + percentY(14),controlsX2 + percentX(17),controlsY2);
 
   }

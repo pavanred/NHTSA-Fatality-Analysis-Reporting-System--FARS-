@@ -25,7 +25,8 @@ class Chart{
   
   Float[] dataset;// = new Float[30];
   
-  String font = "Verdana";
+  //String font = "DroidSans-Bold.ttf";
+  String font = "Serif";
 
   Chart(float _x,float _y, float _Width, float _Height, float _marginwl, float _marginwr, float _marginht, float _marginhb){
     
@@ -117,7 +118,8 @@ class Chart{
     stroke(255);
     
     //axis
-    
+    DecimalFormat formatter = new DecimalFormat("##,##,###");
+
     for (int value = floor(yminValue), index = 0; value <= ceil(ymaxValue); value++, index++) {
        
      if (intervals == 0)
@@ -135,23 +137,28 @@ class Chart{
            
           fill(255); 
            
-          text(str(value),X - percentX(1), Y + plotHeight - (index * plotHeight/difference));
+          text(formatter.format(value).toString(),X - percentX(1), Y + plotHeight - (index * plotHeight/difference));
           
           strokeWeight(2 * scaleFactor);
           line(X,Y + plotHeight - (index * plotHeight/difference),X - percentX(1)/2,Y + plotHeight - (index * plotHeight/difference));
         }
      }
      
-     textFont(createFont(font, 12 * scaleFactor));
+     textFont(createFont(font, 13 * scaleFactor));
       
-     text(labely,X - marginwl/4, Y - marginht*2); 
+     //text(labely,X - marginwl/4, Y - marginht*2);
+      pushMatrix();
+        translate(X - marginwl, Y + percentY(5));
+        rotate(radians(-90));
+        text (labely,0,0);
+        popMatrix(); 
           
      intervals = (xmaxValue-xminValue)/xintervals;
      
      if (intervals == 0)
        intervals = 1;
      
-     for (int value = xminValue, index = 0; value < xmaxValue; value++, index++) {
+     for (Integer value = xminValue, index = 0; value < xmaxValue; value++, index++) {
         
         if(index % intervals == 0){
 
@@ -164,11 +171,11 @@ class Chart{
           else          
             textAlign(CENTER, TOP);
             
-          text(str(value),X + (index * plotWidth/(xmaxValue-xminValue)),Y + plotHeight + percentY(3));
+          text(value.toString(),X + (index * plotWidth/(xmaxValue-xminValue)),Y + plotHeight + percentY(3));
           //println(plotWidth);
           
           strokeWeight(2 * scaleFactor);
-          line(X + (index * plotWidth/(xmaxValue-xminValue)),Y + plotHeight,X + (index * plotWidth/(xmaxValue-xminValue)),Y + plotHeight + percentY(3));    
+          line(X + (index * plotWidth/(xmaxValue-xminValue)),Y + plotHeight,X + (index * plotWidth/(xmaxValue-xminValue)),Y + plotHeight + percentY(2));    
     
             if(value > xminValue){
             stroke(#545454);
@@ -182,12 +189,14 @@ class Chart{
     stroke(255);
     strokeWeight(2 * scaleFactor);
     line(X, Y - percentY(4), X, Y + plotHeight);
-    line(X, Y + plotHeight, X + plotWidth + percentX(1), Y + plotHeight);
+    //line(X, Y + plotHeight, X + plotWidth + percentX(1), Y + plotHeight);
+    line(X, Y + plotHeight, X + plotWidth, Y + plotHeight);
     noStroke();
     
     textFont(createFont(font, 12 * scaleFactor));
     textAlign(RIGHT);    
     text(labelx,X + plotWidth, Y + plotHeight + percentY(10));
+        
     noFill();
     
    }

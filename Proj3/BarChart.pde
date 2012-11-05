@@ -27,7 +27,7 @@ class BarChart{
   int[] xIds; 
   String[] labels;
   
-  String font = "Verdana";
+  String font = "Serif";
 
   BarChart(float _x,float _y, float _Width, float _Height, float _marginwl, float _marginwr, float _marginht, float _marginhb){
     
