@@ -25,13 +25,14 @@ class GUI
     this.graphX2 = x1 + (x2-x1)*0.5;
     this.graphY2 = y1 + (y2-y1)*0.5;
     
-    this.sliderX1 = x1+(x2-x1)*0.025;
-    this.sliderY1 = graphY2;
-    this.sliderX2 = x1 + (x2-x1)*0.5 - (x2-x1)*0.025;
-    this.sliderY2 = graphY2 + (y2-y1)*0.1;
+    this.sliderX1 = x1 + percentX(5);
+    this.sliderY1 = graphY2 - percentY(5);
+    this.sliderX2 = graphX2 - percentX(5) ;
+    //this.sliderY2 = graphY2 + (y2-y1)*0.1;
+    this.sliderY2 = graphY2;
     
     this.controlsX1 = x1;
-    this.controlsY1 = sliderY2+(y2-y1)*0.05;
+    this.controlsY1 = sliderY2+(y2-y1)*0.025;
     this.controlsX2 = x1 + (x2-x1)*0.5;
     this.controlsY2 = sliderY2 + (y2-y1)*0.4;
     
@@ -72,7 +73,7 @@ class GUI
      //rect(graphX1,graphY1,graphX2,graphY2);       
 
     //rect(controlsX1,controlsY1,controlsX2,controlsY2);
-    tabs.draw();    
+        
     barChartArea.draw();
     
     fill(0,200);
@@ -80,7 +81,7 @@ class GUI
     
     popStyle();
     drawControls();
-    
+    tabs.draw();
     popStyle();    
   }
   
@@ -108,7 +109,7 @@ class GUI
     //searchCriteria = new Filters();
     
     //slider = new YearSlider(width-(width*0.75),height-200,width-(width*0.25),height-150,2000,2011);
-    slider = new YearSlider(sliderX1,sliderY1-percentY(4),sliderX2,sliderY2-percentY(4),2000,2011);
+    slider = new YearSlider(sliderX1,sliderY1-percentY(4),sliderX2,sliderY2-percentY(4),2001,2011);
     //slider = new YearSlider(graphX1,graphY1+percentY(4),graphX2,graphY2+percentY(4),2000,2011);
     barChartArea = new BarChartArea(controlsX1 + percentX(6),controlsY1 + percentY(14),controlsX2 + percentX(17),controlsY2);
 
@@ -135,7 +136,24 @@ class GUI
       {
         float w = (detailsX2 - detailsX1)*0.5;
         float h = (detailsY1+detailsY2)/4;
-        text(stateHashMap.get(selectedPoint._State_),detailsX1+w,detailsY1+h);
+        
+        float dx1 = detailsX1;
+        float dy1 = detailsY1;
+        float dx2 = detailsX2;
+        float dy2 = detailsY2;
+        //float dw = (detailsX2-detailsX1)/
+        //float dw = (detailsX2-detailsX1)/
+        float dh = (detailsY2-detailsY1)/3;
+        textAlign(TOP,TOP);
+        String displayString="";
+        //text(stateHashMap.get(selectedPoint._State_),dx1,dy1);
+        displayString += stateHashMap.get(selectedPoint._State_)+"  ";
+        String popn = execQuery.getPopulationMap().get(selectedPoint._State_);
+        String pop1 = popn.split(",")[0];
+        String pop2 = popn.split(",")[1];
+        displayString += "Population in thousands - 2000:"+pop1+",2010:"+pop2+"  ";
+        displayString += "Number of crashes:"+selectedPoint.count;
+        text(displayString,dx1,dy1,dx2,dy2);
       }
       else if(countyLevelZoom!=null && countyLevelZoom)
       {

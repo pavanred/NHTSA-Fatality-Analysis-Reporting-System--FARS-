@@ -826,5 +826,63 @@ class QueryBuilder
     return label;
     
   }
+  
+  HashMap<Integer,String> getPopulationMap()
+  {
+    HashMap<Integer,String> populationMap = new HashMap<Integer,String>();
+    populationMap.put(1,"4447,4780");
+    populationMap.put(2,"627,710");
+    populationMap.put(4,"5131,6392");
+    populationMap.put(5,"2673,2916");
+    populationMap.put(6,"33872,37254");
+    populationMap.put(8,"4301,5029");
+    populationMap.put(9,"3406,3574");
+    populationMap.put(10,"784,898");
+    populationMap.put(11,"572,602");
+    populationMap.put(12,"15982,18801");
+    populationMap.put(13,"8186,9688");
+    populationMap.put(15,"1212,1360");
+    populationMap.put(16,"1294,1568");
+    populationMap.put(17,"12419,12831");
+    populationMap.put(18,"6080,6484");
+    populationMap.put(19,"2926,3046");
+    populationMap.put(20,"2688,2853");
+    populationMap.put(21,"4042,4339");
+    populationMap.put(22,"4469,4533");
+    populationMap.put(23,"1275,1328");
+    populationMap.put(24,"5296,5774");
+    populationMap.put(25,"6349,6548");
+    populationMap.put(26,"9938,9884");
+    populationMap.put(27,"4919,5304");
+    populationMap.put(28,"2845,2967");
+    populationMap.put(29,"5595,5989");
+    populationMap.put(30,"902,989");
+    populationMap.put(31,"1711,1826");
+    populationMap.put(32,"1998,2701");
+    populationMap.put(33,"1236,1316");
+    populationMap.put(34,"8414,8792");
+    populationMap.put(35,"1819,2059");
+    populationMap.put(36,"18976,19378");
+    populationMap.put(37,"8049,9535");
+    populationMap.put(38,"642,673");
+    populationMap.put(39,"11353,11537");
+    populationMap.put(40,"3451,3751");
+    populationMap.put(41,"3421,3831");
+    populationMap.put(42,"12281,12702");
+    populationMap.put(44,"1048,1053");
+    populationMap.put(45,"4012,4625");
+    populationMap.put(46,"755,814");
+    populationMap.put(47,"5689,6346");
+    populationMap.put(48,"20852,25146");
+    populationMap.put(49,"2233,2764");
+    populationMap.put(50,"609,626");
+    populationMap.put(51,"7079,8001");
+    populationMap.put(53,"5894,6725");
+    populationMap.put(54,"1808,1853");
+    populationMap.put(55,"5364,5687");
+    populationMap.put(56,"494,564");
+
+    return populationMap;
+  }
 
 }

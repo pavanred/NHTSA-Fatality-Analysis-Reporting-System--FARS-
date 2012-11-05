@@ -128,10 +128,11 @@ class MapArea
       }
       else if(map.getZoom()<7) //Data points will be list of states
       {
-          if(map.getZoom()>5){
             float ellipseSize = map.getZoom()*7.5;
             for(DataBean b : pointList)
             {
+              if(b==null)
+                continue;
               Location l = new Location(b.get_Latitude_(), b.get_Longitude_());
               Point2f p = map.locationPoint(l);
               fill(#464545,200);
@@ -145,37 +146,10 @@ class MapArea
               b.x = p.x;
               b.y = p.y;
               b.stateLevel = true;
+              textSize(ellipseSize*0.2);
               textAlign(CENTER,CENTER);
               text(execQuery.getDisplayStates().get(b._State_)+"\n"+b.count,p.x,p.y);
             }
-          }
-          else
-          {
-            float ellipseSize = map.getZoom()*10;
-            int count=0;
-            for(DataBean b : pointList)
-            {
-              if(count==10)
-                break;
-              Location l = new Location(b.get_Latitude_(), b.get_Longitude_());
-              Point2f p = map.locationPoint(l);
-              fill(#464545,200);
-              noStroke();
-              ellipse(p.x, p.y, ellipseSize, ellipseSize);
-              fill(#D32929,200);
-              float convVal = map(b.count, 0, pointList.get(pointList.size()-1).count, 0, 360);
-              arc(p.x,p.y,ellipseSize,ellipseSize,0,radians(convVal));
-              fill(#ffffff);
-              textSize(ellipseSize*0.2*scaleFactor);
-              b.dia = ellipseSize;
-              b.x = p.x;
-              b.y = p.y;
-              b.stateLevel = true;
-              textAlign(CENTER,CENTER);
-              text((count+1)+"."+execQuery.getDisplayStates().get(b._State_)+"\n"+b.count,p.x,p.y);
-              count++;
-            }
-          }
       }
     }
     popStyle();
