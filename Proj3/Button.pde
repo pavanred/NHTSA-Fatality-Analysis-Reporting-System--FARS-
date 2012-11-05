@@ -98,6 +98,10 @@ public class TileButton
     {
         fill(labelColor_selected);
         text(label,xPos1,yPos1,xPos2,yPos2);
+        if(label.equals("Help")) //draw help window.
+        {
+          drawHelpBox();
+        }
     }
     else
     {
@@ -124,6 +128,18 @@ public class TileButton
       return 1;
     }
     return 0;
+  }
+  
+  public void drawHelpBox()
+  {
+    pushStyle();
+    fill(0,250);
+    noStroke();
+    rect(gui.graphX1,gui.graphY1,gui.graphX2,gui.graphY2,4);
+    fill(255);
+    text("Help and Credits",gui.graphX1,gui.graphY1,gui.graphX2,gui.graphY2);
+    
+    popStyle();
   }
 }
 
@@ -169,5 +185,7 @@ class BangButton
     }
     else return false;
   }
+  
+  
   
 }

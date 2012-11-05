@@ -85,7 +85,7 @@ class MapArea
           if(map.getZoom()>14)
             fill(#D32929);
           else
-            fill(#D32929,70);
+            fill(#D32929,50);
           noStroke();
           b.x = p.x;
           b.y = p.y;

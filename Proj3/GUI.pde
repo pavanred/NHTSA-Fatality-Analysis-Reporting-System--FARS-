@@ -100,8 +100,12 @@ class GUI
     float tileWidth = (tileX2-tileX1)/5;
     float tileHeight = (tileY2-tileY1)/3;
     buttons = new ArrayList<BangButton>();
+    Tbuttons = new ArrayList<TileButton>();
     BangButton b = new BangButton(tileX2-(tileWidth*0.30),tileY2-tileHeight,tileX2,tileY2,"Apply");
+    //TileButton helpButton = new TileButton(tileX2-(tileWidth*0.30),tileY2+(tileY2-tileY1),tileX2,tileY2+(2*(tileY2-tileY1)),"Help");
+    TileButton helpButton2 = new TileButton(tileX2-(tileWidth*0.30),tileY2,tileX2,tileY2+tileHeight,"Help");
     buttons.add(b);
+    Tbuttons.add(helpButton2);
     
     chartArea = new ChartArea(graphX1,graphY1,graphX2,graphY2 - percentY(13)); //init for chartarea.
 
@@ -122,7 +126,12 @@ class GUI
       b.draw();
     }
     
+    
     slider.drawSlider();
+    for(TileButton b : Tbuttons)
+    {
+      b.draw();
+    }
     drawPointDetails();
   }
   
@@ -141,37 +150,77 @@ class GUI
         float dy1 = detailsY1;
         float dx2 = detailsX2;
         float dy2 = detailsY2;
-        //float dw = (detailsX2-detailsX1)/
-        //float dw = (detailsX2-detailsX1)/
+
         float dh = (detailsY2-detailsY1)/3;
         textAlign(TOP,TOP);
-        String displayString="";
-        //text(stateHashMap.get(selectedPoint._State_),dx1,dy1);
-        displayString += stateHashMap.get(selectedPoint._State_)+"  ";
+        StringBuffer displayString = new StringBuffer();
         String popn = execQuery.getPopulationMap().get(selectedPoint._State_);
         String pop1 = popn.split(",")[0];
         String pop2 = popn.split(",")[1];
         float percentage = map(selectedPoint.count,0,getTotalDistinctCasesCount(),0,100);
-        //float percentage = (selectedPoint.count/getTotalDistinctCasesCount())*100;
-        //println("percentage:"+percentage);
+
         DecimalFormat formatter = new DecimalFormat("##,##,###");
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMaximumFractionDigits(3);
         nf.setMinimumFractionDigits(3);
-        displayString += "Population in thousands - 2000:"+formatter.format(Integer.parseInt(pop1))+", 2010:"+formatter.format(Integer.parseInt(pop2))+"  ";
-        displayString += "Number of crashes:"+selectedPoint.count+"  ";
-        displayString += "Percentage:"+String.valueOf(nf.format(percentage).toString());
-        text(displayString,dx1,dy1,dx2,dy2);
+        
+        float ratio1 = (float) selectedPoint.count/Float.parseFloat(pop1+1000);
+        println(ratio1);
+        float ratio2 = (float) selectedPoint.count/Float.parseFloat(pop2+1000);
+        
+         
+        
+        displayString.append( stateHashMap.get(selectedPoint._State_)+"  ");
+        displayString.append( "Population - 2000:"+formatter.format(Integer.parseInt(pop1+1000))+",  2010:"+formatter.format(Integer.parseInt(pop2+1000))+"  ");
+        displayString.append(", Number of crashes:"+selectedPoint.count+"  ");
+        displayString.append(", Percentage:"+String.valueOf(nf.format(percentage).toString()));
+        text(displayString.toString(),dx1,dy1,dx2,dy2);
       }
       else if(countyLevelZoom!=null && countyLevelZoom)
       {
         float w = (detailsX2 - detailsX1)*0.5;
         float h = (detailsY1+detailsY2)/4;
-        if(selectedPoint._countyName_!=null)
-        text(selectedPoint._countyName_,detailsX1+w,detailsY1+h);
+        float dx1 = detailsX1;
+        float dy1 = detailsY1;
+        float dx2 = detailsX2;
+        float dy2 = detailsY2;
+        
+        StringBuffer displayString = new StringBuffer();
+        NumberFormat nf = NumberFormat.getInstance();
+        nf.setMaximumFractionDigits(3);
+        nf.setMinimumFractionDigits(3);
+        if(selectedPoint!=null && selectedPoint.count!=-1 && selectedPoint.stateCount!=-1 ){
+          float percentage = map(selectedPoint.count,0,selectedPoint.stateCount,0,100);
+          if(selectedPoint._countyName_!=null)
+            displayString.append(selectedPoint._countyName_);
+          displayString.append("Number of crashes:"+selectedPoint.count+"  ");
+          displayString.append(", Percentage:"+String.valueOf(nf.format(percentage).toString()));
+          
+          text(displayString.toString(),dx1,dy1,dx2,dy2);
+        }
       }
       else
-        text("Lat:"+selectedPoint._Latitude_+",Lon:"+selectedPoint._Longitude_,detailsX1+50,detailsY1+50);
+      {
+        StringBuffer displayString = new StringBuffer();
+        float dx1 = detailsX1;
+        float dy1 = detailsY1;
+        float dx2 = detailsX2;
+        float dy2 = detailsY2;
+        
+        displayString.append("Lat:"+selectedPoint._Latitude_+",Lon:"+selectedPoint._Longitude_);
+        String cn = removeWhiteSpaces(selectedPoint._countyName_);
+        displayString.append("County:"+cn+" State:"+selectedPoint._stateName_);
+        displayString.append(", Fatalities:"+selectedPoint._Fatalities_);
+        displayString.append(", Age:"+convertUnknownAge(selectedPoint._Age_));
+        displayString.append(", Travel Speed:"+convertUnknownTravelSpeed(selectedPoint._TravelSpeed_));
+        displayString.append(", Light Condition:"+bimap.getLightBimap().get( selectedPoint._LightCondition_));
+        displayString.append(", Year:"+selectedPoint._Year_);
+        displayString.append(", Road Surface:"+bimap.getRoadSurfaceBimap().get(selectedPoint._RoadwaySurface_));
+        //displayString.append(", Crash Factor:"+bimap.getCrashFactorBimap().get(selectedPoint._CrashFactor_));
+        displayString.append(", Crash Factor:"+selectedPoint._CrashFactor_);
+        text(displayString.toString(),dx1,dy1,dx2,dy2);
+        
+      }
     }
     popStyle();
   }

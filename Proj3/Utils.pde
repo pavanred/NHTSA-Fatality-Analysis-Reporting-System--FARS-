@@ -127,3 +127,23 @@ public Integer getTotalDistinctCasesCount()
   return 363811;
 }
 
+public String removeWhiteSpaces(String s)
+{
+  s.trim();
+  return s;
+}
+
+public String convertUnknownTravelSpeed(int u)
+{
+  if(u==999)
+    return "unknown";
+  else
+    return u+" mph";
+}
+
+public String convertUnknownAge(int a)
+{
+  if(a==999)
+    return "unknown";
+  return a+"";
+}

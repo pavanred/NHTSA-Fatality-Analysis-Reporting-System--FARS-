@@ -142,7 +142,7 @@ public class SQL
                         ResultSet rs,rs2;
 			connection = java.sql.DriverManager.getConnection(url, user, pass);
                         stmt = connection.createStatement();
-                        stmt.execute("PRAGMA page_size = 81920"); // increased page size to improve speed. default - 1520
+                        stmt.execute("PRAGMA page_size = 91200"); // increased page size to improve speed. default - 1520
 			
 		}
 		catch (ClassNotFoundException e)

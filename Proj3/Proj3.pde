@@ -24,6 +24,7 @@ BarChartArea barChartArea;
 ArrayList<KeyValue> barChartData = new ArrayList<KeyValue>();
 
 ArrayList<BangButton> buttons;
+ArrayList<TileButton> Tbuttons;
 Button qButton;
 ArrayList<DataBean> pointList,statePointList;
 Filters searchCriteria;
@@ -310,13 +311,21 @@ void checkButtons(float xPos, float yPos)
         applyChartFilters();
     }
   }
+  for(TileButton b : Tbuttons)
+  {
+    b.touch(xPos,yPos);
+  }
+  
   if(pointList!=null)
   {
-    for(DataBean b : pointList)
-    {
-      if(b.updateButton(xPos,yPos))
+    if(isWithinMap(xPos,yPos)){
+      for(DataBean b : pointList)
       {
-        selectedPoint = b;       
+        
+          if(b.updateButton(xPos,yPos))
+          {
+            selectedPoint = b;       
+          }
       }
     }
   }

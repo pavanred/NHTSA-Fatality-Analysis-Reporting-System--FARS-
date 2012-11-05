@@ -100,8 +100,10 @@ public class DataBean  {
   
   private String _countyName_;
   
+  private String _stateName_;
+  
   //not present in table
-  private int count; 
+  private int count =-1; 
   
   private float x;
   
@@ -115,7 +117,7 @@ public class DataBean  {
   
   private Boolean countyLevel=null;
   
-  private Integer stateCount;
+  private Integer stateCount=-1;
  
   //not present in table
 

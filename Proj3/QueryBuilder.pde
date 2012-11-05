@@ -29,7 +29,7 @@ class QueryBuilder
     String whereClause = constructWhereClause(includeYearRange);  
      //qc="";
     //String query = "SELECT Distinct(CaseNumber),Latitude,Longitude,State,County,Year FROM Data_All WHERE "+ qc + whereClause;
-    String query = "SELECT Distinct(CaseNumber),Latitude,Longitude,State,County FROM Data_All WHERE "+ qc + whereClause;
+    String query = "SELECT Distinct(CaseNumber),Latitude,Longitude,State,County,Fatalities,Year,Weather,LightCondition,CrashFactor,RoadwaySurface,SpeedLimit,Age,TravelSpeed FROM Data_All WHERE "+ qc + whereClause;
     println(query);
     db.query(query);
     ArrayList<DataBean> dbList = new ArrayList<DataBean>();
@@ -41,8 +41,36 @@ class QueryBuilder
       b.set_Longitude_(db.getFloat("Longitude"));
       b.set_State_(db.getInt("State"));
       b.set_County_(db.getInt("County"));
-      //b.set_Year_(db.getInt("Year"));
+      b.set_Fatalities_(db.getInt("Fatalities"));
+      b.set_Year_(db.getInt("Year"));
+      b.set_Weather_(db.getInt("Weather"));
+      b.set_LightCondition_(db.getInt("LightCondition"));
+      b.set_SpeedLimit_(db.getInt("SpeedLimit"));
+      b.set_RoadwaySurface_(db.getInt("RoadwaySurface"));
+      b.set_TravelSpeed_(db.getInt("TravelSpeed"));
+      b.set_Age_(db.getInt("Age"));
+      b.set_Age_(db.getInt("CrashFactor"));
       dbList.add(b);
+    }
+    HashMap<String,String> csSet = new HashMap<String,String>();
+    for(DataBean d : dbList) //To get state and county names for display
+    {
+      ArrayList<String> names;
+      if(csSet.containsKey(new String(d._County_+","+d._State_)))
+      {
+        names = new ArrayList<String>();
+        String[] gcs = csSet.get(d._County_+","+d._State_).split(",");
+        names.add(gcs[0]);
+        names.add(gcs[1]);
+      }
+      else{
+        names = getCountyName(d._County_,d._State_);
+        String tmp1 = d._County_+","+d._State_;
+        String tmp2 = names.get(0)+","+names.get(1);
+        csSet.put( tmp1, tmp2);
+      }
+      d._countyName_ = names.get(0);
+      d._stateName_ = names.get(1);
     }
     stateLevelZoom = false;
     return dbList;
@@ -93,7 +121,6 @@ class QueryBuilder
     println("Result set Size:"+dbNewList.size());
     countyLevelZoom = true;
     String states = Joiner.on(", ").join(hs);
-    println("States - "+states);
     String totQ = "Select State,count(Distinct(CaseNumber)) FROM Data_All WHERE State in ("+states+") " + constructWhereClause(includeYearRange)  + " GROUP BY State";
     println("tot Q:"+ totQ);
     for(DataBean nb : dbNewList)
@@ -106,9 +133,8 @@ class QueryBuilder
             nb.stateCount = bn.count;
         }
       }
-      //nb.stateCount = stateWiseCount.get(nb._State_);
-      println("nb.stateCount::"+nb.stateCount);
     }
+    
     return dbNewList;
   }
   
@@ -280,6 +306,7 @@ class QueryBuilder
   {
     float[] cl = getCurrentMapCoordinates();
     String cq = getCoordQuery(cl);
+    //String cq = "";
     String qry = "SELECT StateId, CountyId, CountyName, Latitude, Longitude FROM County WHERE StateId in ("+inputStates+") AND "+cq+" ORDER BY CountyId";
     println("input states query:"+qry);
     db.query(qry);
@@ -887,6 +914,24 @@ class QueryBuilder
   Integer getTotalCount()
   {
     return 931103;
+  }
+  
+  ArrayList<String> getCountyName(int countyID, int stateID)
+  {
+    String q = "SELECT CountyName,StateId FROM County WHERE CountyId="+countyID +" AND StateId="+stateID;
+    println("Getting county:"+q);
+    db.query(q);
+    String countyName="";
+    String stateName="";
+    while(db.next())
+    {
+      countyName = db.getString("CountyName");
+    }
+    stateName = (String)getDisplayStates().get(stateID);
+    ArrayList<String> names = new ArrayList<String>();
+    names.add(countyName);
+    names.add(stateName);
+    return names;
   }
 
 }
