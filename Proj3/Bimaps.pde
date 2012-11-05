@@ -10,6 +10,9 @@ class Bimaps{
  BiMap<Integer, String> dayList;
  BiMap<Integer, String> monthList;
  BiMap<Integer, String> hourOfDayList;
+ 
+ Bimap<Integer, String> surList;
+ Bimap<Integer, String> factorList;
 
  BiMap<Integer, String> sexList;
  BiMap<String, Integer> filtersList;
@@ -188,6 +191,50 @@ class Bimaps{
    return filtersList;
  }
  
+ public BiMap<Integer,String> getRoadSurfaceBimap(){
+  
+   surList = HashBiMap.create();
+   
+   surList.put(-1,"All");
+   surList.put(1,"Concrete");
+   surList.put(2,"Asphalt");
+   surList.put(3,"Brick/Block");
+   surList.put(4,"Slag, Gravel or Stone");
+   surList.put(5,"Dirt");
+   surList.put(8,"Others");
+   surList.put(9,"Unknown");
+   surList.put(7,"Other");
+   
+   return surList;   
+ }
+
+  public BiMap<Integer,String> getCrashFactorBimap(){
+  
+   factorList = HashBiMap.create();
+   
+   factorList.put(-1,"All");
+   factorList.put(1,"Inadequate Warning of Exits, Lanes Narrowing, Traffic Controls etc.");
+   factorList.put(2,"Shoulder related (design or condition)");
+   factorList.put(3,"Other construction created condition");
+   factorList.put(4,"No or Obscured Pavement Marking");
+   factorList.put(5,"Surface under water");
+   factorList.put(6,"Inadequate construction or poor design of roadway, bridge, etc");
+   factorList.put(7,"Surface washed out (caved in, road slippage)");
+   factorList.put(13,"Aggressive Driving/Road Rage");
+   factorList.put(14,"Motor vehicle struck by falling cargo");
+   factorList.put(15,"Non-Occupant struck by falling cargo");
+   factorList.put(16,"Non-Occupant struck vehicle");
+   factorList.put(17,"Vehicle set in motion by non-driver");
+   factorList.put(18,"Date of crash and date of EMS notification were not the same day");
+   factorList.put(19,"Recent previous crash scene nearby");
+   factorList.put(20,"Police-Pursuit-Involved");
+   factorList.put(21,"Within designated school zone");
+   factorList.put(22,"Speed limit is a statutory limit as recorded");
+   factorList.put(23,"Indication of a stalled/disabled vehicle");
+   factorList.put(99,"Unknown");
+   
+   return factorList;   
+ }
 
  /*public BiMap<String,Location> getCountyBimap(){
   
