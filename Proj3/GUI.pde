@@ -151,7 +151,7 @@ class GUI
         String popn = execQuery.getPopulationMap().get(selectedPoint._State_);
         String pop1 = popn.split(",")[0];
         String pop2 = popn.split(",")[1];
-        displayString += "Population in thousands - 2000:"+pop1+",2010:"+pop2+"  ";
+        displayString += "Population in thousands - 2000:"+pop1+", 2010:"+pop2+"  ";
         displayString += "Number of crashes:"+selectedPoint.count;
         text(displayString,dx1,dy1,dx2,dy2);
       }

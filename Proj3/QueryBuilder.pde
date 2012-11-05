@@ -55,7 +55,6 @@ class QueryBuilder
   {
     boolean includeYearRange = false;
     println("Querying....");
-//    HashMap<Integer,HashMap<Integer,DataBean>> ctList = getCountyCoordList(); //List used to get all county info.
     float[] cl = getCurrentMapCoordinates();
     String cq = getCoordQuery(cl);
     String query = "SELECT State,County,count(*) FROM Data_All WHERE "+ cq + " " + constructWhereClause(includeYearRange) + " group by County";
@@ -99,12 +98,6 @@ class QueryBuilder
     println("States - "+states);
     String totQ = "Select State,count(*) FROM Data_All WHERE State in ("+states+") " + constructWhereClause(includeYearRange)  + " GROUP BY State";
     println("tot Q:"+ totQ);
-//    db.query(totQ);
-//    HashMap<Integer,Integer> stateWiseCount = new HashMap<Integer,Integer>();
-//    while(db.next())
-//    {
-//      stateWiseCount.put(db.getInt("State"),db.getInt(1));
-//    }
     for(DataBean nb : dbNewList)
     {
       if(statePointList!=null)
@@ -154,14 +147,7 @@ class QueryBuilder
     }
     stateLevelZoom = true;
     DataBean dbTotal = new DataBean();
-    String totQ = "Select count(*) FROM Data_All";
-    db.query(totQ);
-    int totCount = 0;
-    while(db.next())
-    {
-      totCount = db.getInt(1);
-    }
-    dbTotal.count = totCount;
+    dbTotal.count = getTotalCount();
     dbList.add(dbTotal);
     println(dbTotal.count);
     return dbList;
@@ -883,6 +869,11 @@ class QueryBuilder
     populationMap.put(56,"494,564");
 
     return populationMap;
+  }
+  
+  Integer getTotalCount()
+  {
+    return 931103;
   }
 
 }

@@ -106,8 +106,8 @@ void setup()
 //Method can be used to prepare all GUI Elements to be drawn
 void setupGUIElements()
 {
-  //plotFont = createFont("DroidSans-Bold.ttf",12*scaleFactor);
-  plotFont = createFont("Serif",12*scaleFactor);
+  plotFont = createFont("DroidSans-Bold.ttf",12*scaleFactor);
+  //plotFont = createFont("Serif",12*scaleFactor);
   textFont(plotFont);
   
   // init map
@@ -328,7 +328,6 @@ void checkButtons(float xPos, float yPos)
 //Called whenever there is a zoom in/out. to call DB.
 void applyChanges()
 {
-    println("mapzoom:"+map.getZoom());
     if(map.getZoom()>=11  && map.getZoom()!= lastZoom) //get point level data only if the map is zoomed > 5
     {
       println("ZOOOM IN:"+map.getZoom());
