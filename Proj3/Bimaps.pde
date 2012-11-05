@@ -12,7 +12,9 @@ class Bimaps{
  BiMap<Integer, String> hourOfDayList;
  
  BiMap<Integer, String> surList;
+
  BiMap<Integer, String> factorList;
+
 
  BiMap<Integer, String> sexList;
  BiMap<String, Integer> filtersList;
@@ -235,7 +237,7 @@ class Bimaps{
    
    return factorList;   
  }
- 
+
 
  /*public BiMap<String,Location> getCountyBimap(){
   
