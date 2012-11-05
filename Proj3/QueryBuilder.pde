@@ -44,8 +44,6 @@ class QueryBuilder
       //b.set_Year_(db.getInt("Year"));
       dbList.add(b);
     }
-    println("returning results"+dbList.size());
-    println(query);
     stateLevelZoom = false;
     return dbList;
   }
@@ -57,7 +55,7 @@ class QueryBuilder
     println("Querying....");
     float[] cl = getCurrentMapCoordinates();
     String cq = getCoordQuery(cl);
-    String query = "SELECT State,County,count(*) FROM Data_All WHERE "+ cq + " " + constructWhereClause(includeYearRange) + " group by County";
+    String query = "SELECT State,County,count(Distinct(CaseNumber)) FROM Data_All WHERE "+ cq + " " + constructWhereClause(includeYearRange) + " group by County order by count(Distinct(CaseNumber)) DESC LIMIT 15";
     db.query(query);
     ArrayList<DataBean> dbList = new ArrayList<DataBean>();// List that is returned.
     HashSet<Integer> hsState = new HashSet<Integer>();
@@ -96,7 +94,7 @@ class QueryBuilder
     countyLevelZoom = true;
     String states = Joiner.on(", ").join(hs);
     println("States - "+states);
-    String totQ = "Select State,count(*) FROM Data_All WHERE State in ("+states+") " + constructWhereClause(includeYearRange)  + " GROUP BY State";
+    String totQ = "Select State,count(Distinct(CaseNumber)) FROM Data_All WHERE State in ("+states+") " + constructWhereClause(includeYearRange)  + " GROUP BY State";
     println("tot Q:"+ totQ);
     for(DataBean nb : dbNewList)
     {
@@ -122,10 +120,7 @@ class QueryBuilder
     getStateBiMap();
     float[] cl = getCurrentMapCoordinates();
     String cq = getCoordQuery(cl);
-    //String query = "SELECT State,count(*) FROM Data_"+year+" group by State"; 
-
-//    String query = "SELECT State,count(*) FROM Data_All group by State order by count(*) DESC";
-    String query = "SELECT State,count(*) FROM Data_All Where 1 = 1" + constructWhereClause(includeYearRange) + " group by State";
+    String query = "SELECT State,count(Distinct(CaseNumber)) FROM Data_All Where 1 = 1" + constructWhereClause(includeYearRange) + " group by State";
     println(query);
     db.query(query);
     ArrayList<DataBean> dbList = new ArrayList<DataBean>();

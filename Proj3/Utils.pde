@@ -120,5 +120,10 @@ HashMap<Integer,ArrayList<Integer>> getDefaultFilter(){
      return dayCategory;
    }  
    
- }  
+ }
+
+public Integer getTotalDistinctCasesCount()
+{
+  return 363811;
+}
 
