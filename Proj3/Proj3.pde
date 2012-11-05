@@ -371,7 +371,6 @@ void applyChartFilters()
     {
       println("ZOOOM IN:"+map.getZoom());
       pointList = execQuery.getPointsFromDB();
-      lastZoom = map.getZoom();
       
     }
     //else if(map.getZoom()>=7 && map.getZoom()<12 && (countyLevelZoom==null || !countyLevelZoom))
@@ -379,25 +378,13 @@ void applyChartFilters()
     {
       println("County zoom IN:"+map.getZoom());
       pointList = execQuery.getCountyPointsFromDB();
-      lastZoom = map.getZoom();
     }
     //else if(map.getZoom()<=6 && (stateLevelZoom==null || !stateLevelZoom))
     else if(map.getZoom()<=6 )
     {
       println("ZOOOM:"+map.getZoom());
-      //pointList = execQuery.getStatePointsFromDB(2001);
-        //statePointList = pointList;
-      lastZoom = map.getZoom();
-      if(statePointList==null)
-      {
         pointList = execQuery.getStatePointsFromDB();
         statePointList = pointList;
-      }
-      else
-      {
-        println("size:"+statePointList.size());
-        pointList = statePointList;
-      }
     }
 
     chartData = execQuery.getCrashesByYear();    

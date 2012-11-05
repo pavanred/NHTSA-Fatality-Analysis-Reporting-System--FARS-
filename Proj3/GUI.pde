@@ -151,8 +151,16 @@ class GUI
         String popn = execQuery.getPopulationMap().get(selectedPoint._State_);
         String pop1 = popn.split(",")[0];
         String pop2 = popn.split(",")[1];
-        displayString += "Population in thousands - 2000:"+pop1+", 2010:"+pop2+"  ";
-        displayString += "Number of crashes:"+selectedPoint.count;
+        float percentage = map(selectedPoint.count,0,getTotalDistinctCasesCount(),0,100);
+        //float percentage = (selectedPoint.count/getTotalDistinctCasesCount())*100;
+        //println("percentage:"+percentage);
+        DecimalFormat formatter = new DecimalFormat("##,##,###");
+        NumberFormat nf = NumberFormat.getInstance();
+        nf.setMaximumFractionDigits(3);
+        nf.setMinimumFractionDigits(3);
+        displayString += "Population in thousands - 2000:"+formatter.format(Integer.parseInt(pop1))+", 2010:"+formatter.format(Integer.parseInt(pop2))+"  ";
+        displayString += "Number of crashes:"+selectedPoint.count+"  ";
+        displayString += "Percentage:"+String.valueOf(nf.format(percentage).toString());
         text(displayString,dx1,dy1,dx2,dy2);
       }
       else if(countyLevelZoom!=null && countyLevelZoom)
