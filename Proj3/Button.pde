@@ -140,9 +140,31 @@ public class TileButton
     fill(0,250);
     noStroke();
     rect(gui.graphX1,gui.graphY1,gui.graphX2,gui.graphY2,4);
+    float xvalHead = gui.graphX1 + percentX(25);
+    float xval = gui.graphX1 + percentX(1);
+    float yval = gui.graphY1 + percentY(2);
+    float widthval = gui.graphX2 - gui.graphX1;
+    float heightval = gui.graphY2 - gui.graphY1;
     fill(255);
-    text("Help and Credits",gui.graphX1,gui.graphY1,gui.graphX2,gui.graphY2);
-    
+    //text("Help and Credits",gui.graphX1,gui.graphY1,gui.graphX2,gui.graphY2);
+    text("How to use this visualization",xvalHead,yval);
+    textAlign(LEFT);
+    yval = yval + percentY(8);    
+    text("Map - Use multitouch to zoom in/out. Touch on any specific glyph to get more information about it",xval,yval);
+    yval = yval + percentY(4);    
+    text("    - Touch and drag to pan across locations on the map ",xval,yval);
+    yval = yval + percentY(4); 
+    text("Tabs - Touch on tabs Crash, Person, Vehicle etc to see the categorised buttons displayed.",xval,yval);
+    yval = yval + percentY(4);    
+    text("     - Touch on these buttons to see a sub menu appear. These items can be touched to select multiple options",xval,yval);   
+    yval = yval + percentY(4);    
+    text("Year slider - Touch and move over the slider to choose a range of time period to filter data",xval,yval);
+    yval = yval + percentY(4);    
+    text("Apply button - After choosing the search criteria in the menus, click this button to apply the filters",xval,yval);
+    yval = yval + percentY(8);    
+    text("Credits - Pavan Reddy, Richard Stahmer, Venkateswaran Ganesan - UIC",xval,yval);
+     yval = yval + percentY(4);    
+    text("Data - National Highway Traffic Safety Administration, USA Census, US General Services Administartion",xval,yval);
     popStyle();
   }
   
@@ -242,9 +264,15 @@ class Events
   String txt;
   int year;
   
+
   Events(int year,String txt)
   {
     this.year = year;
     this.txt = txt;
   }
 }
+
+  
+  
+
+
