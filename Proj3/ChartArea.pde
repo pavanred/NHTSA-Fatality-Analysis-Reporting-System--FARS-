@@ -21,7 +21,7 @@ class ChartArea{
     Chart c = new Chart(X1,Y1,X2-X1,Y2-Y1,percentX(5),percentX(5),percentY(3),percentY(3));  //margins not defined
     
     c.getData(chartData,2001,2011);
-    c.drawChart(0,#EEE09B,10,4,"","Crashes","");   
+    c.drawChart(0,#EBD566,10,4,"","Crashes","");   
     
   }
 }

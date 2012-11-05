@@ -101,15 +101,21 @@ class BarChart{
         
         rect(X + xVal + padding/2,Y + plotHeight - yVal,X + xVal + padding,Y + plotHeight);
         
+        //fill(255);
+        textFont(createFont(font, 11 * scaleFactor));
+        textAlign(CENTER); 
+        
         stroke(255);
         fill(255);
         pushMatrix();
         translate(X + xVal + (padding*0.75), Y + plotHeight + textPadding);
-        rotate(radians(-45));
+        rotate(radians(-40));
         text (labels[index],0,0);
         popMatrix();
      
     }
+    
+    DecimalFormat formatter = new DecimalFormat("##,##,###");
  
    for (int value = floor(yminValue), index = 0; value <= ceil(ymaxValue); value++, index++) {
        
@@ -128,12 +134,19 @@ class BarChart{
            
           fill(255); 
           stroke(255);
-          text(str(value),X - percentX(1), Y + plotHeight - (index * plotHeight/difference));
+          text(formatter.format(value).toString(),X - percentX(1), Y + plotHeight - (index * plotHeight/difference));
           
           strokeWeight(2 * scaleFactor);
           line(X,Y + plotHeight - (index * plotHeight/difference),X - percentX(1)/2,Y + plotHeight - (index * plotHeight/difference));
         }
      }   
+    
+    textFont(createFont(font, 13 * scaleFactor));
+    pushMatrix();
+        translate(X - marginwl, Y + percentY(5));
+        rotate(radians(-90));
+        text (labely,0,0);
+        popMatrix(); 
     
     stroke(255);
     strokeWeight(2 * scaleFactor);

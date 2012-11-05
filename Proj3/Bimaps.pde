@@ -36,7 +36,7 @@ class Bimaps{
    speedList = HashBiMap.create();
    
    speedList.put(-1,"All");
-   speedList.put(0,"Stationary");
+   speedList.put(0,"Static");
    speedList.put(1,"0 - 50");
    speedList.put(2,"51 - 100");
    speedList.put(3,"Above 100");
@@ -50,7 +50,7 @@ class Bimaps{
    lightList = HashBiMap.create();
    
    lightList.put(99,"All");
-   lightList.put(100,"Day light");
+   lightList.put(100,"Daylight");
    lightList.put(101,"Dim");
    lightList.put(102,"Dark");
    lightList.put(103,"Unknown");
@@ -63,10 +63,10 @@ class Bimaps{
    vehicleList = HashBiMap.create();
    
    vehicleList.put(-1,"All");
-   vehicleList.put(0,"Two wheelers");
-   vehicleList.put(1,"Passenger cars");
-   vehicleList.put(2,"Utility vehicles");
-   vehicleList.put(3,"Heavy transport vehicles");
+   vehicleList.put(0,"2 wheelers");
+   vehicleList.put(1,"Cars");
+   vehicleList.put(2,"Utility");
+   vehicleList.put(3,"Heavy transport");
    vehicleList.put(4,"Others");
    vehicleList.put(5,"Unknown");
    
@@ -93,8 +93,8 @@ class Bimaps{
    
    alcoholList.put(-1,"All");
    alcoholList.put(0,"Sober");
-   alcoholList.put(1,"Mildly drunk");
-   alcoholList.put(2,"Heavily drunk");
+   alcoholList.put(1,"Mild");
+   alcoholList.put(2,"Heavy");
    alcoholList.put(3,"Unknown");
    
    return alcoholList;   
@@ -118,18 +118,18 @@ class Bimaps{
    monthList = HashBiMap.create();
    
    monthList.put(-1,"All");
-   monthList.put(1,"January");
-   monthList.put(2,"February");
-   monthList.put(3,"March");
-   monthList.put(4,"April");
+   monthList.put(1,"Jan");
+   monthList.put(2,"Feb");
+   monthList.put(3,"Mar");
+   monthList.put(4,"Apr");
    monthList.put(5,"May");
-   monthList.put(6,"June");
-   monthList.put(7,"July");
-   monthList.put(8,"August");
-   monthList.put(9,"September");
-   monthList.put(10,"October");
-   monthList.put(11,"November");
-   monthList.put(12,"December");
+   monthList.put(6,"Jun");
+   monthList.put(7,"Jul");
+   monthList.put(8,"Aug");
+   monthList.put(9,"Sep");
+   monthList.put(10,"Oct");
+   monthList.put(11,"Nov");
+   monthList.put(12,"Dec");
    monthList.put(0,"Unknown");
    
    return monthList;   

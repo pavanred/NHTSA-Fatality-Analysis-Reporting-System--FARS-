@@ -236,8 +236,10 @@ class QueryBuilder
     int months = bimaps.getFiltersBimap().get("Month");
     //println("null:"+searchCriteria.searchFilter.get(weather));
     
-    if(!includeYearRange)
-      filters.append("AND Year IN (" + arrayListYear() + ") "); 
+    if(!includeYearRange){
+      if(!(searchCriteria.currentMinYear == 2001 && searchCriteria.currentMaxYear == 2010))      
+        filters.append("AND Year IN (" + arrayListYear() + ") ");     
+    } 
     
     if (!searchCriteria.searchFilter.get(weather).contains(bimaps.getWeatherBimap().inverse().get("All")))
       filters.append("AND Weather IN (" + arrayListToCSV(searchCriteria.searchFilter.get(weather)) + ") "); 
@@ -265,6 +267,12 @@ class QueryBuilder
     
     if (!searchCriteria.searchFilter.get(months).contains(bimaps.getMonthBimap().inverse().get("All")))
       filters.append("AND Month IN (" + arrayListToCSV(searchCriteria.searchFilter.get(months)) + ") ");  
+      
+    if (!(searchCriteria.searchFilter.get(hours).contains(bimaps.getHourOfDayBimap().inverse().get("All")) || searchCriteria.getSelectedButton() ==  hours))
+      filters.append("AND HourOrDay IN (" + arrayListToCSV(searchCriteria.searchFilter.get(hours)) + ") ");
+      
+    if (!(searchCriteria.searchFilter.get(days).contains(bimaps.getDayBimap().inverse().get("All")) || searchCriteria.getSelectedButton() ==  days))
+      filters.append("AND Days IN (" + arrayListToCSV(searchCriteria.searchFilter.get(days)) + ") ");
   
     //to add hour and days - should be simple and efficient to do it by adding a column to the table    
         
@@ -680,7 +688,8 @@ class QueryBuilder
         break;
     }*/
     
-    filters.append("AND Year IN (" + arrayListYear() + ") "); 
+    if(!(searchCriteria.currentMinYear == 2001 && searchCriteria.currentMaxYear == 2010))
+      filters.append("AND Year IN (" + arrayListYear() + ") "); 
     
      Bimaps bimaps = new Bimaps(); 
     int weather = bimaps.getFiltersBimap().get("Weather");  
@@ -721,8 +730,11 @@ class QueryBuilder
     if (!(searchCriteria.searchFilter.get(months).contains(bimaps.getMonthBimap().inverse().get("All")) || searchCriteria.getSelectedButton() ==  months))
       filters.append("AND Month IN (" + arrayListToCSV(searchCriteria.searchFilter.get(months)) + ") "); 
   
-    if (!(searchCriteria.searchFilter.get(hours).contains(bimaps.getMonthBimap().inverse().get("All")) || searchCriteria.getSelectedButton() ==  hours))
+    if (!(searchCriteria.searchFilter.get(hours).contains(bimaps.getHourOfDayBimap().inverse().get("All")) || searchCriteria.getSelectedButton() ==  hours))
       filters.append("AND HourOrDay IN (" + arrayListToCSV(searchCriteria.searchFilter.get(hours)) + ") ");
+      
+    if (!(searchCriteria.searchFilter.get(days).contains(bimaps.getDayBimap().inverse().get("All")) || searchCriteria.getSelectedButton() ==  days))
+      filters.append("AND Days IN (" + arrayListToCSV(searchCriteria.searchFilter.get(days)) + ") ");
     
     //to add hour and days - should be simple and efficient to do it by adding a column to the table    
         
@@ -764,6 +776,9 @@ class QueryBuilder
       case 8:
         filters.append(" HourOrDay ");
         break;
+      case 6:
+        filters.append(" Days ");
+        break;
       default:
         filters.append(" Weather ");
         break;
@@ -803,6 +818,9 @@ class QueryBuilder
         break;
       case 8:
         label = bimaps.getHourOfDayBimap().get(id);
+        break;
+      case 6:
+        label = bimaps.getDayBimap().get(id);
         break;
       default:
         label = bimaps.getMonthBimap().get(id);
