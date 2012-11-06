@@ -206,7 +206,7 @@ class GUI
           displayString.append("Number of crashes:"+selectedPoint.count+"  ");
           text(displayString.toString(),dx1,dy1+percentY(3),dx2,dy2+percentY(3));
            displayString.setLength(0);
-          displayString.append(String.valueOf(nf.format(percentage).toString()) + " % of traffic accidents in " + selectedPoint._stateName_);
+          displayString.append(String.valueOf(nf.format(percentage).toString()) + " % of traffic accidents in this state");
           
           text(displayString.toString(),dx1,dy1+percentY(6),dx2,dy2+percentY(6));
         }
