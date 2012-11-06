@@ -126,14 +126,14 @@ void setupGUIElements()
   float windowY1 = height*0.05;
   float windowY2 = height*0.95;
   eventList = new ArrayList<Events>();
-  Events e = new Events(2001,"Event 1");
+  Events e = new Events(2003,"Gulf war");
   eventList.add(e);
-  e = new Events(2004,"Event 2");
+  e = new Events(2005,"Katrina");
   eventList.add(e);
-  e = new Events(2008,"Event 3");
+  e = new Events(2008,"Recession");
   eventList.add(e);
-  e = new Events(2010,"Event 4");
-  eventList.add(e);
+  //e = new Events(2010,"Event 4");
+  //eventList.add(e);
   
   gui = new GUI(windowX1,windowY1,windowX2,windowY2);
   
@@ -349,7 +349,7 @@ void checkButtons(float xPos, float yPos)
 //Called whenever there is a zoom in/out. to call DB.
 void applyChanges()
 {
-    if(map.getZoom()>=11  && map.getZoom()!= lastZoom) //get point level data only if the map is zoomed > 5
+    if(map.getZoom()>=14  && map.getZoom()!= lastZoom) //get point level data only if the map is zoomed > 5
     {
       println("ZOOOM IN:"+map.getZoom());
       pointList = execQuery.getPointsFromDB();
@@ -357,14 +357,14 @@ void applyChanges()
       
     }
     //else if(map.getZoom()>=7 && map.getZoom()<12 && (countyLevelZoom==null || !countyLevelZoom))
-    else if(map.getZoom()>=7 && map.getZoom()<11 && map.getZoom()!= lastZoom)
+    else if(map.getZoom()>=10 && map.getZoom()<14 && map.getZoom()!= lastZoom)
     {
       println("County zoom IN:"+map.getZoom());
       pointList = execQuery.getCountyPointsFromDB();
       lastZoom = map.getZoom();
     }
     //else if(map.getZoom()<=6 && (stateLevelZoom==null || !stateLevelZoom))
-    else if(map.getZoom()<=6 && map.getZoom()!= lastZoom)
+    else if(map.getZoom()<9 && map.getZoom()!= lastZoom)
     {
       println("ZOOOM:"+map.getZoom());
       //pointList = execQuery.getStatePointsFromDB(2001);
@@ -388,20 +388,20 @@ void applyChanges()
 
 void applyChartFilters()
 {
-  if(map.getZoom()>=11  ) //get point level data only if the map is zoomed > 5
+  if(map.getZoom()>=14  ) //get point level data only if the map is zoomed > 5
     {
       println("ZOOOM IN:"+map.getZoom());
       pointList = execQuery.getPointsFromDB();
       
     }
     //else if(map.getZoom()>=7 && map.getZoom()<12 && (countyLevelZoom==null || !countyLevelZoom))
-    else if(map.getZoom()>=7 && map.getZoom()<11 )
+    else if(map.getZoom()>=10 && map.getZoom()<14 )
     {
       println("County zoom IN:"+map.getZoom());
       pointList = execQuery.getCountyPointsFromDB();
     }
     //else if(map.getZoom()<=6 && (stateLevelZoom==null || !stateLevelZoom))
-    else if(map.getZoom()<=6 )
+    else if(map.getZoom()<=9 )
     {
       println("ZOOOM:"+map.getZoom());
         pointList = execQuery.getStatePointsFromDB();

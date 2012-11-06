@@ -77,7 +77,7 @@ class MapArea
     
     pushStyle();
     if(pointList!=null){
-      if(map.getZoom()>=11)
+      if(map.getZoom()>=14)
       {
         float ellipseSize = 10*scaleFactor;
         for(DataBean b : pointList)
@@ -107,7 +107,7 @@ class MapArea
         countyLevelZoom = false;
         stateLevelZoom = false;
       }
-      else if(map.getZoom()<11 && map.getZoom()>=7 && (countyLevelZoom!=null && countyLevelZoom)) //Data poinst will be list of counties
+      else if(map.getZoom()<14 && map.getZoom()>=10 && (countyLevelZoom!=null && countyLevelZoom)) //Data poinst will be list of counties
       {
         float ellipseSize = map.getZoom()*5;
         for(DataBean b : pointList)
@@ -138,7 +138,7 @@ class MapArea
           text(b._countyName_+"\n"+formatter.format(b.count),p.x,p.y);
         }
       }
-      else if(map.getZoom()<7) //Data points will be list of states
+      else if(map.getZoom()<=9) //Data points will be list of states
       {
          Boolean top10=false;
          if(map.getZoom()>4)
