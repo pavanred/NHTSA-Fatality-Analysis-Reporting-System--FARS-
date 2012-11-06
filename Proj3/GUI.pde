@@ -172,10 +172,17 @@ class GUI
          
         
         displayString.append( stateHashMap.get(selectedPoint._State_)+"  ");
-        displayString.append( "Population - 2000:"+formatter.format(Integer.parseInt(pop1+1000))+",  2010:"+formatter.format(Integer.parseInt(pop2+1000))+"  ");
-        displayString.append(", Number of crashes:"+selectedPoint.count+"  ");
-        displayString.append(", Percentage:"+String.valueOf(nf.format(percentage).toString()));
+        textSize(12);
         text(displayString.toString(),dx1,dy1,dx2,dy2);
+        displayString.setLength(0);
+        displayString.append( "Total population in 2000 was "+formatter.format(Integer.parseInt(pop1+1000))+". In 2010, it was "+formatter.format(Integer.parseInt(pop2+1000))+"  ");
+        text(displayString.toString(),dx1,dy1 + percentY(3),dx2,dy2 + percentY(3));
+        displayString.setLength(0);
+        displayString.append("Total number of traffic accidents - "+selectedPoint.count+"  ");
+        text(displayString.toString(),dx1,dy1 + percentY(6),dx2,dy2 + percentY(6));
+        displayString.setLength(0);
+        displayString.append(String.valueOf(nf.format(percentage).toString()) + " % of traffic accidents in USA");
+        text(displayString.toString(),dx1,dy1 + percentY(9),dx2,dy2 + percentY(9));
       }
       else if(countyLevelZoom!=null && countyLevelZoom)
       {
@@ -193,11 +200,15 @@ class GUI
         if(selectedPoint!=null && selectedPoint.count!=-1 && selectedPoint.stateCount!=-1 ){
           float percentage = map(selectedPoint.count,0,selectedPoint.stateCount,0,100);
           if(selectedPoint._countyName_!=null)
-            displayString.append(selectedPoint._countyName_);
+            displayString.append(selectedPoint._countyName_ + " County");
+            text(displayString.toString(),dx1,dy1,dx2,dy2);
+             displayString.setLength(0);
           displayString.append("Number of crashes:"+selectedPoint.count+"  ");
-          displayString.append(", Percentage:"+String.valueOf(nf.format(percentage).toString()));
+          text(displayString.toString(),dx1,dy1+percentY(3),dx2,dy2+percentY(3));
+           displayString.setLength(0);
+          displayString.append(String.valueOf(nf.format(percentage).toString()) + " % of traffic accidents in " + selectedPoint._stateName_);
           
-          text(displayString.toString(),dx1,dy1,dx2,dy2);
+          text(displayString.toString(),dx1,dy1+percentY(6),dx2,dy2+percentY(6));
         }
       }
       else
@@ -208,18 +219,38 @@ class GUI
         float dx2 = detailsX2;
         float dy2 = detailsY2;
         
-        displayString.append("Lat:"+selectedPoint._Latitude_+",Lon:"+selectedPoint._Longitude_);
-        String cn = removeWhiteSpaces(selectedPoint._countyName_);
-        displayString.append("County:"+cn+" State:"+selectedPoint._stateName_);
-        displayString.append(", Fatalities:"+selectedPoint._Fatalities_);
-        displayString.append(", Age:"+convertUnknownAge(selectedPoint._Age_));
-        displayString.append(", Travel Speed:"+convertUnknownTravelSpeed(selectedPoint._TravelSpeed_));
-        displayString.append(", Light Condition:"+bimap.getLightBimap().get( selectedPoint._LightCondition_));
-        displayString.append(", Year:"+selectedPoint._Year_);
-        displayString.append(", Road Surface:"+bimap.getRoadSurfaceBimap().get(selectedPoint._RoadwaySurface_));
-        //displayString.append(", Crash Factor:"+bimap.getCrashFactorBimap().get(selectedPoint._CrashFactor_));
-        displayString.append(", Crash Factor:"+selectedPoint._CrashFactor_);
+        displayString.append("Latitude : "+selectedPoint._Latitude_+",Longitude : "+selectedPoint._Longitude_);
         text(displayString.toString(),dx1,dy1,dx2,dy2);
+        String cn = removeWhiteSpaces(selectedPoint._countyName_);
+        
+        displayString.setLength(0);
+        displayString.append("County - "+cn+" State - "+selectedPoint._stateName_);
+        text(displayString.toString(),dx1 + percentX(30),dy1,dx2 + percentX(30),dy2);
+        
+        displayString.setLength(0);
+        displayString.append("Year - "+selectedPoint._Year_);
+        text(displayString.toString(),dx1,dy1 + percentY(3),dx2,dy2 + percentY(3));
+        
+        displayString.setLength(0);
+        displayString.append("Total Fatalities - "+selectedPoint._Fatalities_);
+        text(displayString.toString(),dx1,dy1 + percentY(6),dx2 ,dy2 + percentY(6));
+        
+        //displayString.append(", Age:"+convertUnknownAge(selectedPoint._Age_));
+        //displayString.append(", Travel Speed:"+convertUnknownTravelSpeed(selectedPoint._TravelSpeed_));
+        displayString.setLength(0);
+        displayString.append("Light Condition - "+bimap.getLightBimap().get( selectedPoint._LightCondition_));
+        text(displayString.toString(),dx1 + percentX(30),dy1 + percentY(6),dx2+ percentX(30),dy2 + percentY(6));
+         
+        displayString.setLength(0);
+        displayString.append("Road Surface - "+bimap.getRoadSurfaceBimap().get(selectedPoint._RoadwaySurface_));
+        text(displayString.toString(),dx1,dy1 + percentY(9),dx2,dy2 + percentY(9));
+        //displayString.append(", Crash Factor:"+bimap.getCrashFactorBimap().get(selectedPoint._CrashFactor_));
+        
+        Bimaps bimap = new Bimaps();
+        
+        displayString.setLength(0);
+        displayString.append("Crash Factor - "+ bimap.getCrashFactorBimap().get(selectedPoint._CrashFactor_));
+        text(displayString.toString(),dx1,dy1+ percentY(12),dx2,dy2+ percentY(12));
         
       }
     }

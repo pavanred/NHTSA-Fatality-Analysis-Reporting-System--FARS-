@@ -234,6 +234,7 @@ class Bimaps{
    factorList.put(22,"Speed limit is a statutory limit as recorded");
    factorList.put(23,"Indication of a stalled/disabled vehicle");
    factorList.put(99,"Unknown");
+   factorList.put(0,"Not known");
    
    return factorList;   
  }
