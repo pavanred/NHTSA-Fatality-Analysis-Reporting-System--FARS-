@@ -1,3 +1,4 @@
+PImage blood_img;
 int[] colorArray;
 class MapArea
 {
@@ -5,6 +6,7 @@ class MapArea
   PVector mapOffset;
   MapArea(PVector mapSize, PVector mapOffset )
   {
+    blood_img = loadImage("blood.png");
     this.mapSize = mapSize;
     this.mapOffset = mapOffset;
     touchList = new Hashtable(); // inits the touch list for multi touch on the map area.
@@ -29,7 +31,7 @@ class MapArea
   // the Yahoo ones look terrible because they're not 256px squares :)
 
   // set the initial location and zoom level:
-  map.setCenterZoom(locationIL, 5);  
+  map.setCenterZoom(locationChicago, 12);  
   
   // zoom 0 is the whole world, 19 is street level
   // (try some out, or use getlatlon.com to search for more)
@@ -82,16 +84,25 @@ class MapArea
         {
           Location l = new Location(b.get_Latitude_(), b.get_Longitude_());
           Point2f p = map.locationPoint(l);
-          if(map.getZoom()>14)
-            fill(#D32929);
-          else
-            fill(#D32929,50);
           noStroke();
           b.x = p.x;
           b.y = p.y;
           b.stateLevel = false;
           b.dia = ellipseSize;
-          ellipse(p.x, p.y, ellipseSize, ellipseSize);
+          if(map.getZoom()>14)
+          {
+            fill(#D32929);
+            if(b._Fatalities_!=0)
+            image(blood_img,p.x,p.y,ellipseSize*4,ellipseSize*4);
+            else
+            ellipse(p.x, p.y, ellipseSize, ellipseSize);
+          }
+          else
+          {
+            fill(#D32929,50);
+            ellipse(p.x, p.y, ellipseSize, ellipseSize);
+          }
+          
         }
         countyLevelZoom = false;
         stateLevelZoom = false;
@@ -291,4 +302,6 @@ class MapArea
       count++;
     }
   }
+  
+  
 }

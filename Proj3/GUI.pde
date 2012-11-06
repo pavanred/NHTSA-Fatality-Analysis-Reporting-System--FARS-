@@ -104,9 +104,18 @@ class GUI
     BangButton b = new BangButton(tileX2-(tileWidth*0.60),tileY2-tileHeight,tileX2-(tileWidth*0.30),tileY2,"Apply");
     TileButton helpButton = new TileButton(tileX2-(tileWidth*0.60),tileY2,tileX2-(tileWidth*0.30),tileY2+tileHeight,"Help");
     TileButton events = new TileButton(tileX2-(tileWidth*0.30),tileY2-tileHeight,tileX2,tileY2,"Events");
+    TileButton usmap = new TileButton(tileX2-(tileWidth*0.30),tileY2,tileX2,tileY2+tileHeight,"Popul.");
+    TileButton switchRoadMap = new TileButton(tileX2-(tileWidth*0.6),tileY2-tileHeight*3,tileX2,tileY2-tileHeight*2.5,"Road");
+    TileButton switchHybridMap = new TileButton(tileX2-(tileWidth*0.6),tileY2-tileHeight*2.5,tileX2,tileY2-tileHeight*2,"Hybrid");
+    TileButton switchAerialMap = new TileButton(tileX2-(tileWidth*0.6),tileY2-tileHeight*2,tileX2,tileY2-tileHeight*1.5,"Aerial");
+//    
     buttons.add(b);
     Tbuttons.add(helpButton);
     Tbuttons.add(events);
+    Tbuttons.add(usmap);
+    Tbuttons.add(switchRoadMap);
+    Tbuttons.add(switchHybridMap);
+    Tbuttons.add(switchAerialMap);
     
     chartArea = new ChartArea(graphX1,graphY1,graphX2,graphY2 - percentY(13)); //init for chartarea.
 
@@ -212,13 +221,12 @@ class GUI
         String cn = removeWhiteSpaces(selectedPoint._countyName_);
         displayString.append("County:"+cn+" State:"+selectedPoint._stateName_);
         displayString.append(", Fatalities:"+selectedPoint._Fatalities_);
-        displayString.append(", Age:"+convertUnknownAge(selectedPoint._Age_));
         displayString.append(", Travel Speed:"+convertUnknownTravelSpeed(selectedPoint._TravelSpeed_));
         displayString.append(", Light Condition:"+bimap.getLightBimap().get( selectedPoint._LightCondition_));
         displayString.append(", Year:"+selectedPoint._Year_);
         displayString.append(", Road Surface:"+bimap.getRoadSurfaceBimap().get(selectedPoint._RoadwaySurface_));
         //displayString.append(", Crash Factor:"+bimap.getCrashFactorBimap().get(selectedPoint._CrashFactor_));
-        displayString.append(", Crash Factor:"+selectedPoint._CrashFactor_);
+        displayString.append(", Crash Factor:"+bimap.getCrashFactorBimap().get(selectedPoint._CrashFactor_));
         text(displayString.toString(),dx1,dy1,dx2,dy2);
         
       }

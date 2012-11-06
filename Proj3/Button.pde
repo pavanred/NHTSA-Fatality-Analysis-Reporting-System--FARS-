@@ -1,3 +1,4 @@
+PImage usmap;
 public class Button
 {
 	//MIGHT WANT TO ADD A BOOL FOR BEING VISIBLE IF WE WILL BE HAVING
@@ -84,6 +85,7 @@ public class TileButton
     this.currentcolor = basecolor;
     this.labelColor_unselected = color(255);
     this.labelColor_selected = color(#F0B30D);
+    usmap = loadImage("usmap.png");
   }
   
   public void draw()
@@ -106,6 +108,11 @@ public class TileButton
         {
           drawEventBox();
         }
+        if(label.equals("Popul."))
+        {
+          drawUSMAP();
+        }
+        
     }
     else
     {
@@ -123,6 +130,18 @@ public class TileButton
       if (isSelected)
       {
         isSelected = false;
+        if(label.equals("Road"))
+        {
+          map.setMapProvider( new Microsoft.RoadProvider() );
+        }
+        if(label.equals("Hybrid"))
+        {
+          map.setMapProvider( new Microsoft.HybridProvider() );
+        }
+        if(label.equals("Aerial"))
+        {
+          map.setMapProvider( new Microsoft.AerialProvider() );
+        }
       }
       else
       {
@@ -165,6 +184,19 @@ public class TileButton
     text("Credits - Pavan Reddy, Richard Stahmer, Venkateswaran Ganesan - UIC",xval,yval);
      yval = yval + percentY(4);    
     text("Data - National Highway Traffic Safety Administration, USA Census, US General Services Administartion",xval,yval);
+    popStyle();
+  }
+  
+  public void drawUSMAP()
+  {
+    float ex1 = chartArea.c.X;//gui.sliderX1;
+    float ey1 = gui.graphY1;//gui.sliderY1-percentY(4);
+    float ex2 = chartArea.c.X+chartArea.c.plotWidth;//gui.sliderX2;
+    float ey2 = gui.graphY2;
+    pushStyle();
+    fill(#ffffff);
+    rect(ex1,ey1,ex2,ey2,4);
+    image(usmap,ex1,ey1,ex2-percentX(10),ey2-percentY(10));
     popStyle();
   }
   
